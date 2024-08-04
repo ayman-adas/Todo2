@@ -66,7 +66,7 @@ export default function UpdatePasswordFomCompmonent() {
 
 
                     <Box marginTop={5}
-                        marginLeft={30} marginRight={30} width={100}>
+                        marginLeft={30} marginRight={30} width={200}>
                         <Button variant="contained" size="large" type="submit" onClick={handleUpdate} fullWidth autoFocus>
                             Update Password
                         </Button>

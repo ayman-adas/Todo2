@@ -7,7 +7,6 @@ import axios from "axios";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
 export default function NewProjectComonent() {
@@ -52,7 +51,7 @@ export default function NewProjectComonent() {
                         required
                         fullWidth
                         name="ProjectName"
-                        label="Projec tName"
+                        label="Project Name"
                         type="text"
                         id="ProjectName"
                         autoComplete="ProjectName"

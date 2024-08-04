@@ -1,10 +1,17 @@
-import React from "react";
-import { Divider, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Divider, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
+import "./grid.css"
+import { motion } from "framer-motion";
 
 export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
   const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const handleProject = () => {
     console.log(ProjectID + "iud");
@@ -18,6 +25,17 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
   };
 
   return (
+    <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))" gap={2}>
+    {Array.from({ length: 12 }).map((_, index) => (
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 ,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
     <Typography
       component={"span"}
       variant={"body2"}
@@ -53,5 +71,8 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
        
       </Card>
     </Typography>
+    </motion.div>
+       ))}
+    </Box>
   );
 }

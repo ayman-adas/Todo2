@@ -94,7 +94,7 @@ export default function SignUPFomCompmonent() {
 
                     <Box ></Box>
                     <Box marginTop={5}
-                        marginLeft={30} marginRight={30} width={100}>
+                        marginLeft={30} marginRight={30} width={200}>
                         <Button variant="contained" size="large" type="submit" onClick={handleRegister} fullWidth autoFocus>
                             SignUp                    </Button>
                     </Box>

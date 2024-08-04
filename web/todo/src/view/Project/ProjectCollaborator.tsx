@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, TextField } from "@mui/material";
 import TodoAppBar from "../../compnent/TodoAppBar";
+import ListCompnent from "../../compnent/ListCompnent";
 
 
-export default function AddProjectCollaborator() {
+export default function ProjectCollaborator() {
     
 return ( 
     <>
@@ -35,8 +36,12 @@ return (
             <Box  marginBottom={14} >
                 <Box display="flex"
                     justifyContent="center"
-                    alignItems="center">  <h1>Login Page</h1></Box>
+                    alignItems="center">  <h1>Project Collaborator Page</h1></Box>
                 <Box height={35}></Box>
+                <h3>Project Collaborator</h3>
+<ListCompnent/>
+<Box height={35}></Box>
+<h3>Add Project Collaborator</h3>
 
                 <TextField
                     required

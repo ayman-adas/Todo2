@@ -14,8 +14,8 @@ export default function ComponentSearch() {
 
             <InputBase
                 sx={{ ml: 1, flex: 1 }}
-                placeholder="Search Google Maps"
-                inputProps={{ 'aria-label': 'search google maps' }}
+                placeholder="Search Projects "
+                inputProps={{ 'aria-label': 'Search Projects' }}
             />
             <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />

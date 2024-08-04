@@ -8,11 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function ProjectView() {
     const Navigate = useNavigate()
 
-    const handleNewTask = () => {
-        console.log('profileAccount');
-
-        Navigate(`/project/Createtask`);
-    };
+   
   return (
     <>
       <TodoAppBar />
@@ -35,12 +31,7 @@ export default function ProjectView() {
   
           }}
       >
-        <Stack direction="row" spacing={0} paddingTop={10} paddingLeft={10}>
-          <Button variant="contained">Add New Collaborator</Button>
-          <Button variant="contained" sx={{ marginLeft: 150 }} onClick={handleNewTask}>
-            Add New Tasks
-          </Button>
-        </Stack>
+       
         <ProjectPageCompnent />
       </Box>
     </>

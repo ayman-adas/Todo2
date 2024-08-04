@@ -79,7 +79,7 @@ export default function LoginFomCompmonent() {
                 </Container>
 
                 <Box marginTop={10}
-                    marginLeft={30} marginRight={30} width={100}>
+                    marginLeft={30} marginRight={30} width={200}>
                     <Button variant="contained" size="large" type="submit" onClick={handleLogin} fullWidth autoFocus>
                         Login                    </Button>
                 </Box>

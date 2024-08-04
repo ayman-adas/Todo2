@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Divider, Paper, Stack } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TaskCompnent from "../Task/TaskCompnent";
 
@@ -8,7 +8,17 @@ export default function ProjectPageCompnent() {
   const location = useLocation();
   const data = location.state;
   var [Tasks, setTasks] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const Navigate = useNavigate()
 
+  const handleNewTask = () => {
+    console.log('profileAccount');
+
+    Navigate(`/project/Createtask`);
+};
+if(data.Author==localStorage.getItem('ProfileName')){
+  setIsVisible(true)
+}
   useEffect(() => {
     console.log("in effect");
     console.log(data.ProjectID);
@@ -39,8 +49,16 @@ export default function ProjectPageCompnent() {
     console.log("Tasks with status 0:", tasksStatus0);
     console.log("Tasks with status 1:", tasksStatus1);
     console.log("Tasks with status 2:", tasksStatus2);
+    console.log(isVisible)
   }, []);
-  return (
+  return (<>
+ { isVisible?
+   <Stack direction="row" spacing={0} paddingTop={10} paddingLeft={10}>
+          <Button variant="contained"> Project Collaborator</Button>
+          <Button variant="contained" sx={{ marginLeft: 150 }} onClick={handleNewTask}>
+            Add New Tasks
+          </Button>
+        </Stack>:<></>}
     <Box
       display="flex"
       justifyContent="center"
@@ -100,5 +118,6 @@ export default function ProjectPageCompnent() {
         </Box>
       </Stack>
     </Box>
+    </>
   );
 }

@@ -1,25 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { Box,  } from '@mui/material';
-import { Margin } from '@mui/icons-material';
+import React, { useState } from 'react';
+import { Box } from '@mui/material';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css'; // Ensure styles are imported
 
 const ProfileDataComponent = () => {
-    const image = "https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg"
-    return (
+    const [isOpen, setIsOpen] = useState(false);
+    const [photoIndex, setPhotoIndex] = useState(0);
 
+    const openLightbox = (index) => {
+        setPhotoIndex(index);
+        setIsOpen(true);
+    };
+
+    const images = [
+        "https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg"
+    ];
+
+    return (
         <Box
-        paddingTop={5}
-        paddingLeft={75}
+            paddingTop={5}
+            paddingLeft={75}
         >
             <img
-                src={image}
-                style={{ width: 100, height: 100, borderRadius: 100 / 2 }}
+                src={images[0]}
+                alt="Profile"
+                style={{ width: 100, height: 100, borderRadius: 50, cursor: 'pointer' }}
                 loading="lazy"
-            />   <h2 style={{marginTop:5,marginLeft:25}}>
-{localStorage.getItem('ProfileName')}
+                onClick={() => openLightbox(0)} // Open lightbox on click
+            />
+            {isOpen && (
+                <Lightbox
+                    mainSrc={images[photoIndex]}
+                    nextSrc={images[(photoIndex + 1) % images.length]}
+                    prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+                    onCloseRequest={() => setIsOpen(false)}
+                    onMovePrevRequest={() =>
+                        setPhotoIndex((photoIndex + images.length - 1) % images.length)
+                    }
+                    onMoveNextRequest={() =>
+                        setPhotoIndex((photoIndex + 1) % images.length)
+                    }
+                />
+            )}
+            <h2 style={{ marginTop: 5, marginLeft: 25 }}>
+                {localStorage.getItem('ProfileName')}
             </h2>
-
         </Box>
-
-    )
+    );
 }
-export default ProfileDataComponent
+
+export default ProfileDataComponent;

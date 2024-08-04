@@ -68,7 +68,7 @@ export default function ForgetPasswordFomCompmonent() {
                
 
                 <Box marginTop={5}
-                    marginLeft={30} marginRight={30} width={100}>
+                    marginLeft={30} marginRight={30} width={200}>
                     <Button variant="contained" size="large"type="submit" onClick={handleForget} fullWidth autoFocus>
                         Reset Password
                     </Button>

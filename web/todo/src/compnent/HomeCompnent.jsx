@@ -159,17 +159,20 @@ const HomeComponent = () => {
             </Box>
             <Box marginTop={5} marginLeft={3} marginRight={15}  >
                 <Grid container spacing={30} rowSpacing={20} columnSpacing={{ xs: 15, sm: 12, md: 13 }}>
-                    {projects.map((project, index) => (
-                        <Grid item key={index} xs={12} sm={6} md={3}>
-                            <ProjectsCompnent
-                                key={index}
-                                ProjectName={project.ProjectName}
-                                Author={project.ProfileName}
-                                ProjectID={project.ProjectID}
+                    {/* {projects.map((project, index) => (
+                        <Grid item key={index} xs={12} sm={6} md={3}>*/}
+                            <ProjectsCompnent 
+                                // key={index}
+                                // ProjectName={project.ProjectName}
+                                // Author={project.ProfileName}
+                                // ProjectID={project.ProjectID}
+                                ProjectName={'project.ProjectName'}
+                                Author={'project.ProfileName'}
+                                ProjectID={'project.ProjectID'}
                             />
                         </Grid>
-                    ))}
-                </Grid>
+                    {/* ))}
+                </Grid> */}
             </Box>
 
         </>

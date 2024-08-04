@@ -15,8 +15,7 @@ import ProfileView from './view/ProfileView';
 import CreateNewProjectPage from './view/Project/CreateNewProjectPage';
 import ProjectView from './view/Project/ProjectView';
 import AddTaskView from './view/Tasks/AddTaskView';
-import AddProjectCollaborator from './view/Project/AddProjectCollaborator'
-
+import ProjectCollaborator from "./view/Project/ProjectCollaborator"
 // const socket = io.connect("http://localhost:4000");
 
 function App() {
@@ -35,7 +34,7 @@ function App() {
       <Route path='/newProject' element={<CreateNewProjectPage />} />
       <Route path='/project' element={<ProjectView />} />
       <Route path='/Createtask' element={<AddTaskView />} />
-      <Route path='/addcollaborator' element={<AddProjectCollaborator />} />
+      <Route path='/collaborator' element={<ProjectCollaborator />} />
 
       <Route path="*" element={<ErrorPage />} />
 
