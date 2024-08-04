@@ -1,0 +1,17 @@
+/* styles.css or your CSS file */
+.slide-in-left {
+    transform: translateX(-100%);
+    opacity: 0;
+    animation: slideInLeft 1s ease-in-out forwards;
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
