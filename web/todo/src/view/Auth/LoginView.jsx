@@ -21,6 +21,7 @@ export default function LoginView() {
         classNames="fade"
         unmountOnExit
       >
+
             <Box
                 sx={{
                     backgroundImage: `url("src/assets/login.jpg")`,

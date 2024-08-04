@@ -1,9 +1,14 @@
 .image-picker-container {
+<<<<<<< HEAD
     max-width: 100;
+=======
+    max-width: 330px;
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
     margin: auto;
   }
   
   .react-image-picker-editor__preview {
+<<<<<<< HEAD
     max-width: 100;
     max-height: 100;
     object-fit: contain;
@@ -16,4 +21,10 @@
     height: auto;      /* Maintain aspect ratio */
     display: block;    /* Ensure it's a block element */
     margin: 0 auto;    /* Center the image */
+=======
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
   }

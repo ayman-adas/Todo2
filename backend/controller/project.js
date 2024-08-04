@@ -1,9 +1,15 @@
 const { con } = require('../services/database');
 const { socketConnection } = require('../index.js');
+<<<<<<< HEAD
 /// create new project
 const createProjcet = (req, res) => {
     const { ProjectName, isPrivate, ProfileID } = req.body;
     //take date of creation
+=======
+
+const createProjcet = (req, res) => {
+    const { ProjectName, isPrivate, ProfileID } = req.body;
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
     const currentDate = new Date();
 
     const sql = `INSERT INTO Project (ProjectName, isPrivate, ProfileID, ProjectCreatedTime) VALUES (?, ?, ?, ?)`;
@@ -16,7 +22,11 @@ const createProjcet = (req, res) => {
         }
 
         const projectID = result.insertId;
+<<<<<<< HEAD
 /// after make a new project i will insert  the owner in prject collaborate
+=======
+
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
         const sqlCollaborators = `INSERT INTO projectcollaborators (ProjectId, ProfileID) VALUES (?, ?)`;
         con.query(sqlCollaborators, [projectID, ProfileID], (err, result) => {
             if (err) {
@@ -33,7 +43,10 @@ const createProjcet = (req, res) => {
         });
     });
 };
+<<<<<<< HEAD
 /// retrive projects i owned
+=======
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const retriveMyProjects = (req, res) => {
 
     const { ProfileID } = req.query
@@ -53,7 +66,11 @@ const retriveMyProjects = (req, res) => {
         });
     })
 }
+<<<<<<< HEAD
 /// add new collaborator
+=======
+
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const insertProjectCollabortor = (req, res) => {
     const { ProfileEmail, ProjectID } = req.body;
 
@@ -65,7 +82,11 @@ const insertProjectCollabortor = (req, res) => {
                 message: err.message
             });
         }
+<<<<<<< HEAD
 ///check if there account
+=======
+
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
         const user = result[0];
 
         const sqlCollaborators = `INSERT INTO projectcollaborators (Profileid, ProjectID) VALUES (?, ?)`;
@@ -84,7 +105,10 @@ const insertProjectCollabortor = (req, res) => {
         });
     });
 }
+<<<<<<< HEAD
 // retrive project that i collaborate
+=======
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const retriveProjectCollabortor = (req, res) => {
 
     const { ProjectID } = req.body
@@ -104,7 +128,10 @@ const retriveProjectCollabortor = (req, res) => {
         });
     })
 }
+<<<<<<< HEAD
 // retrive public project
+=======
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const retrivePublicProjects = () => {
 
     return new Promise((resolve, reject) => {
@@ -126,7 +153,10 @@ const retrivePublicProjects = () => {
         });
     });
 };
+<<<<<<< HEAD
 /// retrive proples who collaborate to this project
+=======
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const retriveProjectsCollaborate = (req, res) => {
     const { ProfileID } = req.query
     var sql = `
@@ -149,7 +179,10 @@ const retriveProjectsCollaborate = (req, res) => {
         });
     })
 }
+<<<<<<< HEAD
 /// delete project collaborate
+=======
+>>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const deleteProjectsCollaborator = (req, res) => {
     const { ProfileID, ProjectID } = req.body
     var sql = `

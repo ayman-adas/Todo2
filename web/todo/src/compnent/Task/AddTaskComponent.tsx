@@ -53,6 +53,7 @@ const initialImage = "";
           <Box display="flex" justifyContent="center" alignItems="center">
             {" "}
             <h1>Create New Task Page</h1>
+
           </Box>
           <Box height={35}></Box>
           <TextField
@@ -91,6 +92,7 @@ const initialImage = "";
           <DatePickerCompnent />
           <Box></Box>
           <Box marginTop={5} marginLeft={30} marginRight={30} width={300}>
+
             <Button
               variant="contained"
               size="large"

@@ -28,6 +28,7 @@ return (
                 },
                 "-ms-overflow-style": "none", // Hide scrollbar in IE and Edge
                 "scrollbar-width": "none", // Hide scrollbar in Firefox
+
               }}
                 display="flex"
 
