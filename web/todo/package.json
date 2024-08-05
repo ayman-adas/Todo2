@@ -1,7 +1,7 @@
 {
   "name": "todo",
   "private": true,
-  "homepage": " ayman-adas.github.io/Todo2",
+  "homepage": "ayman-adas.github.io/Todo2",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
