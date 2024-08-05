@@ -34,7 +34,8 @@ export default function LoginFomCompmonent() {
 
                 localStorage.setItem('token',result.data.result)
                 Navigate("/",);
-                
+                window.location.reload();
+
             })
             .catch((err) => {
                 console.log(err.message);

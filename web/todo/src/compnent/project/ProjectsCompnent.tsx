@@ -26,12 +26,10 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
 
   return (
     <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))" gap={2}>
-    {Array.from({ length: 12 }).map((_, index) => (
       <motion.div
-        key={index}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 ,
+        transition={{ duration: 0.5, delay: 1 * 0.1 ,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -72,7 +70,6 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
       </Card>
     </Typography>
     </motion.div>
-       ))}
     </Box>
   );
 }

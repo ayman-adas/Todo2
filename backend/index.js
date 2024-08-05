@@ -25,7 +25,8 @@ const socketIO = require('socket.io')(socketIOServer, {
         methods: ['POST', 'GET'],
     }
 });
-
+app.use(express.json({ extended: false, limit: '50mb' }))
+app.use(express.urlencoded({ limit: '50mb', extended: false, parameterLimit: 50000 }))
 // Middleware setup for Express
 app.use(cors());
 app.use(express.json());

@@ -1,11 +1,42 @@
 const { con } = require('../services/database');
 
 const createTask = (req, res) => {
-    const { taskName,taskDescription,taskImage,taskID,taskDueDate,ProfileID } = req.body;
+    const { taskName,taskDescription,taskImage,taskDueDate,ProjectID } = req.body;
     const currentDate = new Date();
+    let formattedDueDate;
 
-    const sql = `INSERT INTO task (taskName,taskDescription,taskImage,taskID,taskDueDate,taskStatus,TaskCreatedTime) VALUES (?, ?, ?,?, ?,false,?)`;
-    con.query(sql, [taskName,taskDescription,taskImage,taskID,taskDueDate,currentDate], (err, result) => {
+    try {
+        // Split the date into parts
+        const parts = taskDueDate.split(' ');
+        if (parts.length !== 3) {
+            throw new Error('Invalid date format');
+        }
+        
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+
+        // Check if parts are valid numbers
+        if (isNaN(day) || isNaN(month) || isNaN(year)) {
+            throw new Error('Invalid date components');
+        }
+
+        // Format the date as YYYY-MM-DD
+        formattedDueDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+        // Check if the date is valid
+        const dueDate = new Date(formattedDueDate);
+        if (isNaN(dueDate.getTime())) {
+            throw new Error('Invalid date');
+        }
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid taskDueDate: ' + error.message
+        });
+    }
+    const sql = `INSERT INTO task (taskName,taskDescription,taskImage,taskDueDate,taskStatus,ProjectID,TaskCreatedTime) VALUES (?,  ?,?, ?,false,?,?)`;
+    con.query(sql, [taskName,taskDescription,taskImage,formattedDueDate,ProjectID,currentDate], (err, result) => {
         if (err) {
             return res.status(400).json({
                 success: false,
@@ -15,20 +46,11 @@ const createTask = (req, res) => {
 
         const taskID = result.insertId;
 
-        const sqlCollaborators = `INSERT INTO taskcollaborator (taskID, ProfileID) VALUES (?, ?)`;
-        con.query(sqlCollaborators, [taskID, ProfileID], (err, result) => {
-            if (err) {
-                return res.status(400).json({
-                    success: false,
-                    message: err.message
-                });
-            }
 
             res.status(200).json({
                 success: true,
-                message: "task and collaborators inserted successfully."
+                message: taskID
             });
-        });
     });
 };
 

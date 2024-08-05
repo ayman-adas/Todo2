@@ -6,15 +6,13 @@ import { motion } from "framer-motion";
 export default function TaskCompnent({ TaskName, TaskDescription, TaskImage, TaskDueDate}) {
   const defaultImage =
     "https://cdn-icons-png.flaticon.com/512/2098/2098402.png";
-
+console.log(TaskImage)
   return (<>
   <Box display="flex" flexWrap="wrap" gap={2}>
-      {Array.from({ length: 10 }).map((_, index) => (
         <motion.div
-          key={index}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }} // Staggered animation
+          transition={{ duration: 0.5, delay: 1 * 0.1 }} // Staggered animation
           style={{
             width: 200,
             height: 300,
@@ -45,7 +43,7 @@ export default function TaskCompnent({ TaskName, TaskDescription, TaskImage, Tas
 
     <Box> </Box>
     </motion.div>
-      ))}
+      
     </Box>
     </>
 

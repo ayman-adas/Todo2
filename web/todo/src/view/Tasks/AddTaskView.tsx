@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import TodoAppBar from "../../compnent/TodoAppBar";
 import NewTaskComonent from "../../compnent/Task/AddTaskComponent";
 
-export default function AddTaskView() {
+export default function AddTaskView({ProjectID}) {
     
 return ( 
     <>
@@ -35,7 +35,7 @@ return (
                 justifyContent="center"
                 alignItems="center"
             >
-                <NewTaskComonent/>
+                <NewTaskComonent ProjectID={ProjectID}/>
             </Box>
     </>
 )}

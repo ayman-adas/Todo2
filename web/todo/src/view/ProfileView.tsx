@@ -96,18 +96,23 @@ export default function ProfileView() {
         >
           My Projects
         </h2>
-        <Box marginTop={5} marginLeft={15} marginRight={15}  >
-
-        <Grid container spacing={30} rowSpacing={20} columnSpacing={{ xs: 15, sm: 12, md: 13 }}>
-        {MyProjects.map((project) => (
-            <Grid item xs={12} sm={6} md={3}>
-              <ProjectsCompnent
-                ProjectName={project.ProjectName}
-                Author={project.ProjectCreatedTime}
-              />
-            </Grid>
-          ))}
-        </Grid> 
+        <Box marginTop={5} marginLeft={15} marginRight={15}>
+          <Grid
+            container
+            spacing={30}
+            rowSpacing={20}
+            columnSpacing={{ xs: 15, sm: 12, md: 13 }}
+          >
+            {MyProjects.map((project) => (
+              <Grid item xs={12} sm={6} md={3}>
+                <ProjectsCompnent
+                  ProjectID={project.ProjectID}
+                  ProjectName={project.ProjectName}
+                  Author={localStorage.getItem("ProfileName")}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
         <Box height={50}></Box>
 
@@ -119,19 +124,23 @@ export default function ProfileView() {
         >
           Projects That I Collaborate
         </h2>
-        <Box marginTop={5} marginLeft={15} marginRight={15}  >
-
-        <Grid container spacing={30} rowSpacing={20} columnSpacing={{ xs: 15, sm: 12, md: 13 }}>
-        {ProjectsCollaborate.map((project) => (
-            <Grid item xs={12} sm={6} md={3}>
-              <ProjectsCompnent
-                ProjectName={project.ProjectName}
-                Author={project.ProjectCreatedTime}
-                ProjectId={project.ProjectId}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        <Box marginTop={5} marginLeft={15} marginRight={15}>
+          <Grid
+            container
+            spacing={30}
+            rowSpacing={20}
+            columnSpacing={{ xs: 15, sm: 12, md: 13 }}
+          >
+            {ProjectsCollaborate.map((project) => (
+              <Grid item xs={12} sm={6} md={3}>
+                <ProjectsCompnent
+                  ProjectName={project.ProjectName}
+                  Author={project.ProjectCreatedTime}
+                  ProjectId={project.ProjectId}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       </Box>
     </>

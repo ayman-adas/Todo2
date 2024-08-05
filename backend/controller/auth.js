@@ -1,11 +1,8 @@
 const bcrypt = require('bcrypt')
 const { con } = require('../services/database')
 const jwt = require("jsonwebtoken");
-<<<<<<< HEAD
 ///[login] login authentication with email and password
-=======
 
->>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const login = async (req, res) => {
     if (res) {
         const { ProfileEmail, ProfilePasword } = req.body;
@@ -18,11 +15,9 @@ const login = async (req, res) => {
                 console.error('Error executing query:', error);
                 return res.status(500).send('Error logging in');
             }
-<<<<<<< HEAD
 /// if there no account
-=======
 
->>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
+
             if (results.length === 0) {
                 return res.status(400).send('User not found');
             }
@@ -59,32 +54,24 @@ const login = async (req, res) => {
 
     }
 }
-<<<<<<< HEAD
 /// make bew account
 const signUp = async (req, res) => {
     ///take time of signup
-=======
-const signUp = async (req, res) => {
->>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
+
+
     const now = new Date();
 
     const { profileName, ProfileEmail, ProfilePasword } = req.body
     console.log(ProfileEmail)
     console.log(profileName)
     console.log(ProfilePasword)
-<<<<<<< HEAD
 ///to make hasing password
-=======
 
->>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
     const salt = await bcrypt.genSalt(10)
     console.log(salt);
     const pass = await bcrypt.hash(ProfilePasword, salt)
     console.log(pass)
-<<<<<<< HEAD
     //[password code] code for authentication when you forget password
-=======
->>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
     const passwordCode = await bcrypt.hash(now.getTime().toString(), salt)
     console.log(passwordCode)
     const sql = `INSERT INTO profile (profileName, ProfileEmail, ProfilePasword, PASSWORDCode) VALUES (?, ?, ?, ?)`;
@@ -103,10 +90,7 @@ const signUp = async (req, res) => {
     });
 
 }
-<<<<<<< HEAD
 // forget password take your email and passcode to check if exist
-=======
->>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const forgetPassword = (req, res) => {
     const { ProfileEmail, PASSWORDCode } = req.body
     console.log(ProfileEmail)
@@ -134,10 +118,7 @@ const forgetPassword = (req, res) => {
     });
 
 }
-<<<<<<< HEAD
 ///making update to password
-=======
->>>>>>> e28eaf2dc3dbb4d810743dd81a20b7890f2933f4
 const updatePassword = async (req, res) => {
     if (res) {
         const { ProfileEmail, ProfilePasword } = req.body
@@ -169,4 +150,27 @@ const updatePassword = async (req, res) => {
         });
     }
 }
-module.exports = { login, signUp, forgetPassword, updatePassword }
+const retriveUsers=(req,res)=>{
+
+    const sql = `SELECT * FROM profile`;
+    con.query(sql, function (err, result) {
+        if (err) res.status(400).json({
+            success: false,
+            message: err
+        });
+        console.log(result)
+        if (result.length != 0) {
+            res.status(200).json({
+                success: true,
+                message: result
+            }); res.end();
+        }
+        else {
+            res.status(400).json({
+                success: false,
+                message: "doesnt exist."
+            }); res.end();
+        }
+    });
+}
+module.exports = { login, signUp, forgetPassword, updatePassword,retriveUsers }

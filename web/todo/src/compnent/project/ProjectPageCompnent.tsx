@@ -14,11 +14,14 @@ export default function ProjectPageCompnent() {
   const handleNewTask = () => {
     console.log('profileAccount');
 
-    Navigate(`/project/Createtask`);
+    Navigate(`/Createtask`,{ state: data });
 };
-if(data.Author==localStorage.getItem('ProfileName')){
-  setIsVisible(true)
-}
+const handleCollaborate = () => {
+  console.log('profileAccount');
+
+  Navigate(`/collaborator`,{ state: data });
+};
+
   useEffect(() => {
     console.log("in effect");
     console.log(data.ProjectID);
@@ -52,13 +55,13 @@ if(data.Author==localStorage.getItem('ProfileName')){
     console.log(isVisible)
   }, []);
   return (<>
- { isVisible?
+ { data.Author==localStorage.getItem('ProfileName')?
    <Stack direction="row" spacing={0} paddingTop={10} paddingLeft={10}>
-          <Button variant="contained"> Project Collaborator</Button>
+          <Button variant="contained" onClick={handleCollaborate}> Project Collaborator </Button>
           <Button variant="contained" sx={{ marginLeft: 150 }} onClick={handleNewTask}>
             Add New Tasks
           </Button>
-        </Stack>:<></>}
+        </Stack>:<li></li>}
     <Box
       display="flex"
       justifyContent="center"
