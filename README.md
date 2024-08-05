@@ -1,120 +1,34 @@
-TODO Website
-Welcome to the TODO Website! This project is a full-stack application built with Node.js, React, Material-UI, and MySQL. It provides a comprehensive platform for managing projects and tasks with robust authentication and user collaboration features.
+# Todo Website
 
-📦 Features
-Authentication: Secure user login and registration with unique authentication codes for each user.
-Public Projects: Browse and view all publicly available projects.
-Personal Projects: Create and manage your own projects. Only the owner can edit or delete their projects.
-Profile Page: View and manage your personal profile, including projects you own and those you collaborate on.
-Dynamic Search: A responsive search bar to filter projects dynamically.
-Animations: Smooth and engaging animations for a better user experience.
-Collaborations: Add collaborators to your projects and manage permissions.
-🚀 Getting Started
-Follow these instructions to get a copy of the project up and running on your local machine.
+Welcome to the Todo Website! 🚀 This project is a full-stack application built with Node.js and React, styled using Material UI, and powered by a MySQL database. It provides a seamless and interactive experience for managing projects and tasks, with robust authentication and dynamic features.
 
-Prerequisites
-Node.js (v14 or later)
-npm or yarn
-MySQL (localhost)
-Setup
-1. Clone the Repository
-bash
-نسخ الكود
-git clone https://github.com/your-username/todo-website.git
-cd todo-website
-2. Install Dependencies
-Backend:
+## Features
 
-bash
-نسخ الكود
-cd server
-npm install
-Frontend:
+- **User Authentication:** Secure user login and registration with unique authentication codes for each user.
+- **Project Management:** 
+  - Create, view, and manage your own projects.
+  - Only project owners can edit their projects.
+  - View and collaborate on projects with other users.
+- **Public Projects:** Discover and browse all public projects created by users.
+- **Dynamic Search Bar:** Quickly find projects with a real-time, dynamic search feature.
+- **Profile Page:** 
+  - Access and manage your profile.
+  - View your created projects and the projects you’re collaborating on.
+- **Task Management:** 
+  - Organize tasks into different statuses: To Do, In Progress, and Done.
+  - Drag-and-drop functionality to update task statuses.
+- **Responsive Design:** Beautiful and responsive UI built with Material UI.
+- **Animations:** Smooth transitions and animations enhance user experience.
 
-bash
-نسخ الكود
-cd client
-npm install
-3. Configure Environment Variables
-Create a .env file in the server directory with the following content:
+Usage
+Authentication: Register and log in to access the application. Each user receives a unique authentication code.
+Project Management: Create new projects, view public projects, and manage your own projects.
+Task Management: Use drag-and-drop to organize tasks by status and manage them efficiently.
+Contributing
+Contributions are welcome! If you have suggestions, improvements, or bug fixes, please feel free to submit a pull request or open an issue.
 
-env
-نسخ الكود
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=todo_database
-PORT=2003
-Frontend:
-
-Create a .env file in the client directory with the following content:
-
-env
-نسخ الكود
-REACT_APP_API_URL=http://localhost:2003
-4. Set Up the Database
-Run the SQL scripts located in the server directory to set up the MySQL database.
-
-sql
-نسخ الكود
--- Example SQL script
-CREATE DATABASE todo_database;
-
-USE todo_database;
-
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    auth_code VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE projects (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    is_private BOOLEAN NOT NULL DEFAULT false,
-    owner_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Add more tables as needed...
-5. Start the Development Servers
-Backend:
-
-bash
-نسخ الكود
-cd server
-npm start
-Frontend:
-
-bash
-نسخ الكود
-cd client
-npm start
-The application will be available at http://localhost:3000 and the API server at http://localhost:2003.
-
-🧩 Usage
-Register: Create a new account and receive an authentication code.
-Login: Use your credentials to log in and access the application.
-Create Projects: Start new projects and manage them.
-Collaborate: Invite other users to collaborate on your projects.
-Search: Use the search bar to find projects dynamically.
-🛠️ Built With
-Backend: Node.js, Express, MySQL
-Frontend: React, Material-UI
-Animations: Various React animation libraries
-🎨 Design
-The application uses Material-UI for a modern and responsive design with a focus on user experience and accessibility.
-
-🤝 Contributing
-Feel free to submit pull requests or open issues to contribute to the project. Please make sure to follow the coding standards and test your changes.
-
-📝 License
+License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-📧 Contact
-For any inquiries or support, please contact your-email@example.com.
-
-
-
+Contact
+For any questions or inquiries, please contact aymanhaniadas28@gmail.com.
