@@ -1,5 +1,5 @@
 // repositories/ProjectRepository.js
-const {IProjectRepository} = require('./interfaceProject');
+const { IProjectRepository } = require('./interfaceProject');
 const { MySql } = require('../../services/database');
 
 class ProjectRepository extends IProjectRepository {
@@ -22,7 +22,7 @@ class ProjectRepository extends IProjectRepository {
 
     async retrieveMyProjects(profileId, limit, offset) {
         const sql = `SELECT * FROM Project WHERE ProfileID = ? ORDER BY ProjectCreatedTime LIMIT ? OFFSET ?;`;
-        return await this.mySql.query(sql, [ parseInt (profileId), parseInt(limit), parseInt(offset)]);
+        return await this.mySql.query(sql, [parseInt(profileId), parseInt(limit), parseInt(offset)]);
     }
 
     async insertProjectCollaboratorByEmail(profileEmail, projectId) {
@@ -35,7 +35,7 @@ class ProjectRepository extends IProjectRepository {
 
     async retrieveProjectCollaborators(projectId) {
         const sql = `SELECT * FROM projectcollaborators INNER JOIN Profile ON projectcollaborators.ProfileID = Profile.ProfileID WHERE ProjectID = ?`;
-        return await this.mySql.query(sql,parseInt( [projectId]));
+        return await this.mySql.query(sql, parseInt([projectId]));
     }
 
     async retrievePublicProjects() {
@@ -46,7 +46,7 @@ class ProjectRepository extends IProjectRepository {
     async retrieveProjectsCollaborating(profileID) {
         console.log(profileID)
         const sql = `SELECT *  FROM Project P INNER JOIN projectcollaborators PC ON P.ProjectID = PC.ProjectID WHERE PC.ProfileID = ? ORDER BY ProjectCreatedTime ;`;
-       const result= await this.mySql.query(sql, [ ( profileID),]);
+        const result = await this.mySql.query(sql, [(profileID),]);
         console.log(result)
         return result
     }
@@ -60,4 +60,4 @@ class ProjectRepository extends IProjectRepository {
     }
 }
 
-module.exports = {ProjectRepository};
+module.exports = { ProjectRepository };

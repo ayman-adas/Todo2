@@ -36,7 +36,7 @@ export default function ProjectPageCompnent() {
   return (
     <>
  { data.Author==localStorage.getItem('ProfileName')?      (
-        <Stack direction="row" spacing={2} padding={3} justifyContent="center" paddingTop={7}>
+        <Stack direction="row" spacing={2} padding={3} justifyContent="center" paddingTop={12}>
           <Button variant="contained" onClick={handleCollaborate} sx={{ backgroundColor: '#00796b', '&:hover': { backgroundColor: '#004d40' } }}>
             Project Collaborator
           </Button>
