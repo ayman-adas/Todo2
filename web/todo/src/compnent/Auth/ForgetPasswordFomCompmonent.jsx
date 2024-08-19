@@ -1,82 +1,99 @@
-import React,{useState} from "react";
-import { Box,  TextField } from "@mui/material";
-import Button from '@mui/material/Button';
+import React, { useState } from "react";
+import { Box, Container, TextField, Typography, Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function ForgetPasswordFomCompmonent() {
-    var  [ProfileEmail, setProfileEmail] = useState("");
-    var [PASSWORDCode, setPASSWORDCode] = useState("");
-      
-    const Navigate = useNavigate()
+export default function ForgetPasswordFormComponent() {
+    const [profileEmail, setProfileEmail] = useState("");
+    const [passwordCode, setPasswordCode] = useState("");
+
+    const navigate = useNavigate();
+
     const handleForget = (e) => {
-        console.log('Forget')
         e.preventDefault();
-      console.log(ProfileEmail)
-      console.log(PASSWORDCode)
         axios
             .post("http://localhost:2003/forgetPassword", {
-                ProfileEmail: ProfileEmail,
-                PASSWORDCode: PASSWORDCode,
-
+                profileEmail,
+                passwordCode,
             })
             .then((result) => {
-                localStorage.setItem('ProfileEmail',ProfileEmail)
-                console.log("forget pass successfully :", result.data);
-                Navigate("/updatePassword",);
-                
+                localStorage.setItem('ProfileEmail', profileEmail);
+                console.log("Password reset initiated successfully:", result.data);
+                navigate("/updatePassword");
             })
             .catch((err) => {
-                console.log(err.message);
+                console.error("Error during password reset:", err.message);
             });
     };
 
     return (
-        
-        <>
-
-        <form >
-            <Box marginBottom={14} >
-                <Box display="flex"
-                    justifyContent="center"
-                    alignItems="center">  <h1>Foregt password Page</h1></Box>
+        <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="100vh"
+            p={3}
+        >
+            <Container
+                maxWidth="xs"
+                component="form"
+                onSubmit={handleForget}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    p: 4,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Forget Password
+                </Typography>
 
                 <TextField
                     required
                     fullWidth
-                    name="ProfileEmail"
-                    label="email adress"
+                    id="email"
+                    label="Email Address"
+                    name="profileEmail"
                     type="email"
-                    id="ProfileEmail"
                     autoComplete="email"
-                    onChange={(e) =>{ ProfileEmail=(e.target.value)
-                    
-                    }  }              />
-                <Box height={35}></Box>
-
-                <TextField
-                    required
-                    fullWidth
-                    id="PASSWORDCode"
-                    label="PASSWORD Code"
-                    name="PASSWORDCode"
-                    autoComplete="text"
-                    autoFocus
-                    onChange={(e) => PASSWORDCode=(e.target.value)}
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(e) => setProfileEmail(e.target.value)}
                 />
 
-               
+                <TextField
+                    required
+                    fullWidth
+                    id="passwordCode"
+                    label="Password Code"
+                    name="passwordCode"
+                    type="text"
+                    autoComplete="off"
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(e) => setPasswordCode(e.target.value)}
+                />
 
-                <Box marginTop={5}
-                    marginLeft={30} marginRight={30} width={200}>
-                    <Button variant="contained" size="large"type="submit" onClick={handleForget} fullWidth autoFocus>
-                        Reset Password
+                <Button
+                    variant="contained"
+                    size="large"
+                    type="submit"
+                    fullWidth
+                    sx={{ mt: 3 }}
+                >
+                    Reset Password
+                </Button>
+
+                <Stack direction="row" spacing={1} mt={2} alignItems="center">
+                    <Typography variant="body2">Remembered your password?</Typography>
+                    <Button variant="text" onClick={() => navigate("/login")}>
+                        Login
                     </Button>
-
-                </Box>
-
-            </Box>
-            </form>
-        </>
-    )
+                </Stack>
+            </Container>
+        </Box>
+    );
 }

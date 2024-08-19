@@ -18,7 +18,7 @@ export default function UpdatePasswordFomCompmonent() {
 
         axios
             .patch("http://localhost:2003/updatePassword", {
-                ProfilePasword: ProfilePasword,
+                profilePasword: ProfilePasword,
                 ProfileEmail: localStorage.getItem('ProfileEmail')
             })
             .then((result) => {

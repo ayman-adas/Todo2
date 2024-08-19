@@ -6,11 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios";
 import ProjectsCompnent from "../compnent/project/ProjectsCompnent";
+import { LIMIT } from "styled-components/dist/utils/createWarnTooManyClasses";
+import "bootstrap/dist/css/bootstrap.css";
 
 export default function ProfileView() {
   const [projects, setProjects] = useState([]);
   var [MyProjects, setMyProjects] = useState([]);
   var [ProjectsCollaborate, setProjectsCollaborate] = useState([]);
+  var [PageNumber, setPageNumber] = useState(0);
 
   const Navigate = useNavigate();
 
@@ -25,6 +28,8 @@ export default function ProfileView() {
           {
             params: {
               ProfileID: localStorage.getItem("ProfileID"),
+              limit: 5,
+              offset: PageNumber,
             },
           }
         );
@@ -48,7 +53,9 @@ export default function ProfileView() {
           "http://localhost:2003/project/retrive/collaborate",
           {
             params: {
-              ProfileID: localStorage.getItem("ProfileID"),
+              profileID: localStorage.getItem("ProfileID"),
+              limit: 5,
+              offset: 3,
             },
           }
         );
@@ -85,18 +92,12 @@ export default function ProfileView() {
           overflow: "auto", // Allow scrolling
         }}
       >
-        <Stack direction="row" paddingLeft={40}>
+        <Stack direction="row" paddingLeft={40} className="row">
           <ProfileDataComponent />
         </Stack>
         <Divider />
-        <h2
-          style={{
-            paddingLeft: 900,
-          }}
-        >
-          My Projects
-        </h2>
-        <Box marginTop={5} marginLeft={15} marginRight={15}>
+        <h2 className="text-center my-4">My Projects</h2>
+        <Box>
           <Grid
             container
             spacing={30}
@@ -104,7 +105,7 @@ export default function ProfileView() {
             columnSpacing={{ xs: 15, sm: 12, md: 13 }}
           >
             {MyProjects.map((project) => (
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={3} className="focus-ring-secondary">
                 <ProjectsCompnent
                   ProjectID={project.ProjectID}
                   ProjectName={project.ProjectName}
@@ -117,31 +118,27 @@ export default function ProfileView() {
         <Box height={50}></Box>
 
         <Divider />
-        <h2
-          style={{
-            paddingLeft: 820,
-          }}
-        >
-          Projects That I Collaborate
-        </h2>
-        <Box marginTop={5} marginLeft={15} marginRight={15}>
-          <Grid
-            container
-            spacing={30}
-            rowSpacing={20}
-            columnSpacing={{ xs: 15, sm: 12, md: 13 }}
-          >
-            {ProjectsCollaborate.map((project) => (
-              <Grid item xs={12} sm={6} md={3}>
-                <ProjectsCompnent
-                  ProjectName={project.ProjectName}
-                  Author={project.ProjectCreatedTime}
-                  ProjectId={project.ProjectId}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <h2 className="text-center my-4">Projects That I Collaborate</h2>
+        <span className="container-fluid">
+          <Box>
+            <Grid
+              container
+              spacing={30}
+              rowSpacing={20}
+              columnSpacing={{ xs: 15, sm: 12, md: 13 }}
+            >
+              {ProjectsCollaborate.map((project) => (
+                <Grid item xs={12} sm={6} md={3}>
+                  <ProjectsCompnent
+                    ProjectName={project.ProjectName}
+                    Author={project.ProjectCreatedTime}
+                    ProjectId={project.ProjectId}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </span>
       </Box>
     </>
   );

@@ -1,17 +1,17 @@
 const express = require("express");
-const { createTask, insertTaskCollabortor, retriveTaskollabortor, retriveTasksCollaborate, deleteTaskCollaborator, UpdateIsDoneTask, retriveTasksReleaetedToProject } = require("../controller/task");
+const { Tasks } = require("../controller/task");
 
 const taskRouter = express.Router();
-
+const tasks=new Tasks()
 // Pass the functions as handlers, not invoke them
-taskRouter.post("/task/create", createTask);
-taskRouter.post("/task/insert/collaborator", insertTaskCollabortor);
-taskRouter.get("/task/insert/collaborator", insertTaskCollabortor);
-taskRouter.get("/task/collabortors/retrive", retriveTaskollabortor);
-taskRouter.get("/task/collaborate/retrive", retriveTasksCollaborate);
-taskRouter.get("/project/tasks/retrive", retriveTasksReleaetedToProject);
+taskRouter.post("/task/create", tasks.createTask);
+taskRouter.post("/task/insert/collaborator", tasks.insertTaskCollabortor);
+taskRouter.get("/task/insert/collaborator", tasks.insertTaskCollabortor);
+taskRouter.get("/task/collabortors/retrive",tasks. retriveTaskollabortor);
+taskRouter.get("/task/collaborate/retrive",tasks. retriveTasksCollaborate);
+taskRouter.get("/project/tasks/retrive", tasks.retriveTasksReleaetedToProject);
 
-taskRouter.delete("/task/collabortors/delete", deleteTaskCollaborator);
-taskRouter.put("/task/updateIsDone", UpdateIsDoneTask);
+taskRouter.delete("/task/collabortors/delete",tasks. deleteTaskCollaborator);
+taskRouter.put("/task/updateIsDone", tasks.UpdateIsDoneTask);
 
 module.exports = {taskRouter};

@@ -1,180 +1,122 @@
-const { con } = require('../services/database');
-const { socketConnection } = require('../index.js');
-/// create new project
-const createProjcet = (req, res) => {
-    const { ProjectName, isPrivate, ProfileID } = req.body;
-    //take date of creation
-    const currentDate = new Date();
+// Controllers/ProjectController.js
+const { ProjectRepository } = require('../repository/project/projectReposotory')
+projectRepository = new ProjectRepository()
+class ProjectController {
+    constructor(projectRepository) {
+        this.projectRepository = projectRepository;
+    }
 
-    const sql = `INSERT INTO Project (ProjectName, isPrivate, ProfileID, ProjectCreatedTime) VALUES (?, ?, ?, ?)`;
-    con.query(sql, [ProjectName, isPrivate, ProfileID, currentDate], (err, result) => {
-        if (err) {
-            return res.status(400).json({
-                success: false,
-                message: err.message
-            });
-        }
-
-        const projectID = result.insertId;
-/// after make a new project i will insert  the owner in prject collaborate
-
-        const sqlCollaborators = `INSERT INTO projectcollaborators (ProjectId, ProfileID) VALUES (?, ?)`;
-        con.query(sqlCollaborators, [projectID, ProfileID], (err, result) => {
-            if (err) {
-                return res.status(400).json({
-                    success: false,
-                    message: err.message
-                });
-            }
-
+    async createProject(req, res) {
+        try {
+            const { ProjectName, isPrivate, ProfileID } = req.body;
+            const projectId = await projectRepository.createProject({ ProjectName, isPrivate, ProfileID });
+            await projectRepository.insertProjectCollaborator(projectId, ProfileID);
             res.status(200).json({
                 success: true,
                 message: "Project and collaborators inserted successfully."
             });
-        });
-    });
-};
-/// retrive projects i owned
-const retriveMyProjects = (req, res) => {
-
-    const { ProfileID } = req.query
-    const sql = `select * from Project where Profileid =? Order BY ProjectCreatedTime`;
-
-    con.query(sql, ProfileID, (err, result) => {
-        if (err) {
-            return res.status(400).json({
+        } catch (error) {
+            res.status(400).json({
                 success: false,
-                message: err.message
+                message: error.message
             });
         }
+    }
 
-        res.status(200).json({
-            success: true,
-            message: result
-        });
-    })
-}
-/// add new collaborator
-const insertProjectCollabortor = (req, res) => {
-    const { ProfileEmail, ProjectID } = req.body;
-
-    const sql = `select Profileid from Profile where ProfileEmail =?`;
-    con.query(sql, ProfileEmail, (err, result) => {
-        if (err) {
-            return res.status(400).json({
-                success: false,
-                message: err.message
-            });
-        }
-///check if there account
-        const user = result[0];
-
-        const sqlCollaborators = `INSERT INTO projectcollaborators (Profileid, ProjectID) VALUES (?, ?)`;
-        con.query(sqlCollaborators, [user.Profileid, ProjectID], (err, result) => {
-            if (err) {
-                return res.status(400).json({
-                    success: false,
-                    message: err.message
-                });
-            }
-
+    async retrieveMyProjects(req, res) {
+        try {
+            const { ProfileID, limit, offset } = req.query;
+            const result = await projectRepository.retrieveMyProjects(ProfileID, limit, offset);
             res.status(200).json({
                 success: true,
-                message: "Project and collaborators inserted successfully."
+                message: result
             });
-        });
-    });
-}
-// retrive project that i collaborate
-const retriveProjectCollabortor = (req, res) => {
-
-    const { ProjectID } = req.query
-    const sql = `select * from projectcollaborators INNER JOIN Profile where projectcollaborators.ProfileID=profile.ProfileID and  ProjectID =?`;
-
-    con.query(sql, ProjectID, (err, result) => {
-        console.log(result)
-        if (err) {
-            return res.status(400).json({
+        } catch (error) {
+            res.status(400).json({
                 success: false,
-                message: err.message
+                message: error.message
             });
         }
+    }
 
-        res.status(200).json({
-            success: true,
-            message: result
-        });
-    })
-}
-// retrive public project
-const retrivePublicProjects = () => {
-
-    return new Promise((resolve, reject) => {
-        sql = `SELECT 
-        P.ProjectName,
-        Profile.ProfileName,
-        P.ProjectID,
-        COUNT(*) OVER () AS TotalCount
-    FROM Project P
-    INNER JOIN Profile ON P.ProfileID = Profile.ProfileID
-    WHERE P.IsPrivate = false  Order BY ProjectCreatedTime;`;
-
-        con.query(sql, (err, result) => {
-            if (err) {
-                console.error('Error retrieving projects:', err);
-                return reject(err);
-            }
-            resolve(result);
-        });
-    });
-};
-/// retrive proples who collaborate to this project
-const retriveProjectsCollaborate = (req, res) => {
-    const { ProfileID } = req.query
-    var sql = `
-    SELECT 
-       *
-    FROM
-       Project P
-    INNER JOIN projectcollaborators PC ON P.ProjectID = PC.ProjectID where PC.ProfileID= ?  Order BY ProjectCreatedTime `;
-    con.query(sql, ProfileID, (err, result) => {
-        if (err) {
-            return res.status(400).json({
+    async insertProjectCollaborator(req, res) {
+        try {
+            const { ProfileEmail, ProjectID } = req.body;
+            await projectRepository.insertProjectCollaboratorByEmail(ProfileEmail, ProjectID);
+            res.status(200).json({
+                success: true,
+                message: "Project collaborator added successfully."
+            });
+        } catch (error) {
+            res.status(400).json({
                 success: false,
-                message: err.message
+                message: error.message
             });
         }
+    }
 
-        res.status(200).json({
-            success: true,
-            message: result
-        });
-    })
-}
-/// delete project collaborate
-const deleteProjectsCollaborator = (req, res) => {
-    const { ProfileID, ProjectID } = req.body
-    var sql = `
-    delete from projectcollaborators where ProfileID= ? AND ProjectID= ? `;
-    con.query(sql, [ProfileID, ProjectID], (err, result) => {
-        if (err) {
-            return res.status(400).json({
+    async retrieveProjectCollaborators(req, res) {
+        try {
+            const { ProjectID } = req.query;
+            const result = await projectRepository.retrieveProjectsCollaborating(parseInt(ProjectID));
+            res.status(200).json({
+                success: true,
+                message: result
+            });
+        } catch (error) {
+            res.status(400).json({
                 success: false,
-                message: err.message
+                message: error.message
             });
         }
+    }
 
-        res.status(200).json({
-            success: true,
-            message: result
-        });
-    })
+    async retrievePublicProjects(req, res) {
+        try {
+            const result = await projectRepository.retrievePublicProjects();
+            res.status(200).json({
+                success: true,
+                message: result
+            });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async retrieveProjectsCollaborating(req, res) {
+        try {
+            const { profileID } = req.query;
+            const result = await projectRepository.retrieveProjectsCollaborating(profileID);
+            res.status(200).json({
+                success: true,
+                message: result
+            });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async deleteProjectCollaborator(req, res) {
+        try {
+            const { ProfileEmail, ProjectID } = req.body;
+            await projectRepository.deleteProjectCollaborator(ProfileEmail, ProjectID);
+            res.status(200).json({
+                success: true,
+                message: "Project collaborator removed successfully."
+            });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
 
-
-module.exports = {
-    createProjcet, retriveMyProjects, insertProjectCollabortor,
-    retriveProjectCollabortor, retrivePublicProjects, retriveProjectsCollaborate,
-    deleteProjectsCollaborator,
-};
-
+module.exports = { ProjectController };

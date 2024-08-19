@@ -1,112 +1,112 @@
-import React from "react";
-import { Box, Stack, TextField } from "@mui/material";
-import Button from '@mui/material/Button';
+import React, { useState } from "react";
+import { Box, Container, Stack, TextField, Typography, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
 
-export default function SignUPFomCompmonent() {
-    var [ProfileEmail,] = useState("");
-    var [ProfilePasword, setProfilePasword] = useState("");
-    var [profileName, setprofileName] = useState("");
+export default function SignUpFormComponent() {
+    const [profileEmail, setProfileEmail] = useState("");
+    const [profilePassword, setProfilePassword] = useState("");
+    const [profileName, setProfileName] = useState("");
 
+    const navigate = useNavigate();
 
-    const Navigate = useNavigate()
     const handleRegister = (e) => {
-        console.log('register')
         e.preventDefault();
-        console.log(ProfileEmail)
-        console.log(ProfilePasword)
-        console.log(profileName)
         axios
             .post("http://localhost:2003/signUp", {
-                profileName: profileName,
-                ProfileEmail: ProfileEmail,
-                ProfilePasword: ProfilePasword,
-
+                profileName,
+                profileEmail,
+                profilePassword,
             })
             .then((result) => {
-                localStorage.setItem('token',result.data.token)
-                console.log(result.data.token)
-
-                console.log("register successfully :", result.data);
-                Navigate("/dialog");
+                localStorage.setItem('token', result.data.token);
+                console.log("Register successfully:", result.data);
+                navigate("/dialog");
             })
             .catch((err) => {
-                console.log(err.message);
+                console.error("Register error:", err.message);
             });
     };
 
     return (
-        <>
-            <form>
+        <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="100vh"
+            p={3}
+        >
+            <Container
+                maxWidth="xs"
+                component="form"
+                onSubmit={handleRegister}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    p: 4,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Sign Up
+                </Typography>
 
-
-                <Box marginBottom={5} >
-                    <Box display="flex"
-                        justifyContent="center"
-                        alignItems="center">  <h1>Sign Up Page</h1></Box>
-                    <Box height={35}></Box>
-                    <TextField
-
-                        required
-                        fullWidth
-                        name="profileName"
-                        label="username"
-                        type="text"
-                        id="username"
-                        autoComplete="account"
-                        onChange={(e) => profileName = (e.target.value)}
-                    />                    <Box height={35}></Box>
-
-                    <TextField
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="ProfileEmail"
-                        autoComplete="email"
-                        autoFocus
-                        onChange={(e) => ProfileEmail = (e.target.value)}
-
-                    />
-                    <Box height={35}></Box>
-                    <TextField
-                        required
-                        fullWidth
-                        name="ProfilePasword"
-                        label="Password"
-                        type="password"
-                        id="ProfilePasword"
-                        autoComplete="current-password"
-                        onChange={(e) => ProfilePasword = (e.target.value)}
-                    />                    <Box height={35}></Box>
-
-                    {/* <TextField
+                <TextField
                     required
                     fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
+                    id="username"
+                    label="Username"
+                    name="profileName"
+                    autoComplete="name"
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(e) => setProfileName(e.target.value)}
+                />
+
+                <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="profileEmail"
+                    autoComplete="email"
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(e) => setProfileEmail(e.target.value)}
+                />
+
+                <TextField
+                    required
+                    fullWidth
                     id="password"
+                    label="Password"
+                    name="profilePassword"
+                    type="password"
                     autoComplete="current-password"
-                /> */}
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(e) => setProfilePassword(e.target.value)}
+                />
 
-                    <Box ></Box>
-                    <Box marginTop={5}
-                        marginLeft={30} marginRight={30} width={200}>
-                        <Button variant="contained" size="large" type="submit" onClick={handleRegister} fullWidth autoFocus>
-                            SignUp                    </Button>
-                    </Box>
-                    <Box height={35}></Box>
-                    <Stack direction="row" gap={0}>
-                        <h3>have an account: </h3>
-                        <Button variant="text" size="large" onClick={() => Navigate("/login")} autoFocus>
-                            Login</Button>
-                    </Stack>
-                </Box>s
-            </form>
+                <Button
+                    variant="contained"
+                    size="large"
+                    type="submit"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                >
+                    Sign Up
+                </Button>
 
-        </>
-    )
+                <Stack direction="row" spacing={1} mt={2} alignItems="center">
+                    <Typography variant="body2">Already have an account?</Typography>
+                    <Link href="#" onClick={() => navigate("/login")}>
+                        <Button variant="text">Login</Button>
+                    </Link>
+                </Stack>
+            </Container>
+        </Box>
+    );
 }

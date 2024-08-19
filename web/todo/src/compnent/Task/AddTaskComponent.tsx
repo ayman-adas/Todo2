@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import DatePickerCompnent from "../DatePickerCompnent";
@@ -13,118 +13,92 @@ export default function NewTaskComponent() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [imageSrc, setImageSrc] = useState("");
   const location = useLocation();
-  const data = location.state;
+  const data = location.state || {}; // Handle undefined state
   const navigate = useNavigate();
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
-    console.log("create");
-    console.log(taskName);
-    console.log(taskDescription);
-    console.log(data.ProjectID);
-    console.log(imageSrc);
-    console.log(selectedDate);
-
-    axios
-      .post("http://localhost:2003/task/create", {
-         headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-        taskName: taskName,
-        taskDescription: taskDescription,
+    try {
+      const result = await axios.post("http://localhost:2003/task/create", {
+        taskName,
+        taskDescription,
         taskImage: imageSrc,
         taskDueDate: selectedDate,
-        ProjectID: data.ProjectID, // Ensure ProjectID is correctly assigned
+        ProjectID: data.ProjectID,
+      }, {
+        headers: { 'Content-Type': 'application/json' }, // Use correct header
+      });
 
-      })
-      .then((result) => {
-        console.log("Task created successfully");
-        for (const collaborator of selectedCollaborators) {
-console.log(collaborator)
-        axios
-        .post("http://localhost:2003/task/insert/collaborator", {
+      console.log("Task created successfully:", result.data);
+
+      for (const collaborator of selectedCollaborators) {
+        await axios.post("http://localhost:2003/task/insert/collaborator", {
           taskID: result.data.message,
           ProfileEmail: collaborator,
-      
-        })
-        .then((result) => {
-          console.log("Task created successfully");
-          navigate("/profile");
-        })
-        .catch((err) => {
-          console.log("Error creating task:", err.message);
-        });}
-      })
-      .catch((err) => {
-        console.log("Error creating task:", err.message);
-      });
-     
+        });
+      }
+
+      navigate("/profile");
+    } catch (err) {
+      console.error("Error creating task:", err.message);
+    }
   };
 
   const handleCollaboratorsChange = (collaborators) => {
-    console.log("Selected collaborators:", collaborators);
     setSelectedCollaborators(collaborators);
   };
 
   const handleDateChange = (date) => {
-    console.log("Selected date:", date);
     setSelectedDate(date);
   };
 
   const handleImageChange = (image) => {
-    console.log("Selected image:", image);
     setImageSrc(image);
   };
 
   return (
-    <form onSubmit={handleCreate}>
-      <Box>
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <h1>Create New Task Page</h1>
-        </Box>
-        <Box height={35}></Box>
-        <TextField
-          required
-          fullWidth
-          name="TaskName"
-          label="Task Name"
-          type="text"
-          id="TaskName"
-          autoComplete="TaskName"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
-        />
-        <Box height={35}></Box>
-        <TextField
-          required
-          fullWidth
-          name="TaskDescription"
-          label="Task Description"
-          type="text"
-          id="TaskDescription"
-          autoComplete="TaskDescription"
-          value={taskDescription}
-          onChange={(e) => setTaskDescription(e.target.value)}
-        />
-        <Box height={35}></Box>
-        <AddImageCompnent onImageChange={handleImageChange} />
-        <Box height={35}></Box>
-        <DatePickerCompnent onDateChange={handleDateChange} />
-        <Box></Box>
-        <h4>Add Task Collaborator</h4>
-        <ListComponent onCollaboratorsChange={handleCollaboratorsChange} />
-        <Box marginTop={5} marginLeft={30} marginRight={30} width={300}>
-          <Button
-            variant="contained"
-            size="large"
-            type="submit"
-            fullWidth
-            autoFocus
-          >
-            Create Task
-          </Button>
-        </Box>
-      </Box>
-    </form>
+    <Box component="form" onSubmit={handleCreate} sx={{ maxWidth: 600, mx: 'auto', my: 4, p: 3, borderRadius: 1, boxShadow: 3, paddingTop:10 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Create New Task
+      </Typography>
+
+      <TextField
+        required
+        fullWidth
+        label="Task Name"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+        sx={{ mb: 2 }}
+      />
+
+      <TextField
+        required
+        fullWidth
+        label="Task Description"
+        value={taskDescription}
+        onChange={(e) => setTaskDescription(e.target.value)}
+        sx={{ mb: 2 }}
+      />
+
+      <AddImageCompnent onImageChange={handleImageChange} />
+      <Box height={2}></Box>
+      <DatePickerCompnent onDateChange={handleDateChange} />
+      <Box height={2}></Box>
+
+      <Typography variant="h6" gutterBottom>
+        Add Task Collaborators
+      </Typography>
+      <ListComponent onCollaboratorsChange={handleCollaboratorsChange} />
+
+      <Button
+        variant="contained"
+        size="large"
+        type="submit"
+        fullWidth
+        sx={{ mt: 3 }}
+      >
+        Create Task
+      </Button>
+    </Box>
   );
 }

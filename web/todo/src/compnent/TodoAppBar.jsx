@@ -1,18 +1,18 @@
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu'; // Example icon
 
 export default function TodoAppBar() {
   return (
-    <Box>
-      <AppBar>
-        
-          <Typography variant="h6" align='center'>
-            ToDo
-          </Typography>
-      
-      </AppBar>
-    </Box>
+    <AppBar  sx={{ backgroundColor: '#1976d2' }}>
+      <Toolbar sx={{ padding: '0 16px' }}>
+    
+        <Typography variant="h3" sx={{ flexGrow: 1, textAlign: 'center' }}>
+          ToDo
+        </Typography>
+
+    
+      </Toolbar>
+    </AppBar>
   );
 }

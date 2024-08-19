@@ -1,176 +1,74 @@
-const bcrypt = require('bcrypt')
-const { con } = require('../services/database')
-const jwt = require("jsonwebtoken");
-///[login] login authentication with email and password
+// controllers/authController.js
+const {HashService} = require('../services/hashService');
+const{ JwtService }= require('../services/jwtService');
+const {UserService} = require('../services/userService');
 
-const login = async (req, res) => {
-    if (res) {
-        const { ProfileEmail, ProfilePasword } = req.body;
-        console.log(ProfileEmail)
-        console.log(ProfilePasword)
-        // Find user by ProfileEmail
-        const sql = `SELECT * FROM profile WHERE profileEmail = ?`;
-        con.query(sql, [ProfileEmail], async (error, results) => {
-            if (error) {
-                console.error('Error executing query:', error);
-                return res.status(500).send('Error logging in');
-            }
-/// if there no account
+hashService = new HashService();
+jwtService = new JwtService();
+userService = new UserService();
+class AuthController {
 
 
-            if (results.length === 0) {
-                return res.status(400).send('User not found');
-            }
-            else {
-                const user = results[0];
+    async login(req, res) {
+        const { loginEmail, loginPassword } = req.body;
+        console.log(userService.toString())
+        const user = await userService.findUserByEmail(loginEmail);
 
-                // Compare the ProfilePasword with the hashed ProfilePasword
-                const isMatch = await bcrypt.compare(ProfilePasword, user.ProfilePasword);
+        if (!user) return res.status(400).send('User not found');
 
-                if (!isMatch) {
-                    return res.status(400).send('Invalid credentials');
-                }
-                const payload = {
-                    user
-                };
-                const options = { expiresIn: "20h" };
-                const secret = process.env.SECRET_KEY;
-                const token = jwt.sign(payload, secret, options);
-                if (token) {
-                    console.log(results)
-                    console.log(user.ProfileID)
-                    res.status(200).json({
-                        messgge: "Login successful",
-                        result: token,
-                        ProfileID: user.ProfileID,
-                        ProfileName: user.ProfileName,
-                        ProfileEmail: user.ProfileEmail,
+        const isMatch = await hashService.compareHash(loginPassword, user.ProfilePasword);
 
-                    })
-                }
-                else { res.send('failed') }
-            }
-        });
+        if (!isMatch) return res.status(400).send('Invalid credentials');
 
-    }
-}
-/// make bew account
-const signUp = async (req, res) => {
-    ///take time of signup
+        const token = jwtService.generateToken({ user: user }, process.env.SECRET_KEY, '20h');
 
-
-    const now = new Date();
-
-    const { profileName, ProfileEmail, ProfilePasword } = req.body
-    console.log(ProfileEmail)
-    console.log(profileName)
-    console.log(ProfilePasword)
-///to make hasing password
-
-    const salt = await bcrypt.genSalt(10)
-    console.log(salt);
-    const pass = await bcrypt.hash(ProfilePasword, salt)
-    console.log(pass)
-    //[password code] code for authentication when you forget password
-    const passwordCode = await bcrypt.hash(now.getTime().toString(), salt)
-    console.log(passwordCode)
-    const sql = `INSERT INTO profile (profileName, ProfileEmail, ProfilePasword, PASSWORDCode) VALUES (?, ?, ?, ?)`;
-    con.query(sql, [profileName, ProfileEmail, pass, passwordCode], function (err, result) {
-        if (err) res.status(400).json({
-            success: false,
-            message: err
-        });
-        else {
-            res.status(200).json({
-                success: true,
-                message: "inserted.",
-                token: passwordCode
-            }); res.end();
-        }
-    });
-
-}
-// forget password take your email and passcode to check if exist
-const forgetPassword = (req, res) => {
-    const { ProfileEmail, PASSWORDCode } = req.body
-    console.log(ProfileEmail)
-    console.log(PASSWORDCode)
-
-    const sql = `SELECT * FROM profile WHERE profileEmail = ? And passwordCode= ? `;
-    con.query(sql, [ProfileEmail, PASSWORDCode], function (err, result) {
-        if (err) res.status(400).json({
-            success: false,
-            message: err
-        });
-        console.log(result)
-        if (result.length != 0) {
-            res.status(200).json({
-                success: true,
-                message: "sucsess."
-            }); res.end();
-        }
-        else {
-            res.status(400).json({
-                success: false,
-                message: "doesnt exist."
-            }); res.end();
-        }
-    });
-
-}
-///making update to password
-const updatePassword = async (req, res) => {
-    if (res) {
-        const { ProfileEmail, ProfilePasword } = req.body
-        console.log(ProfileEmail)
-        console.log(ProfilePasword)
-        console.log(ProfileEmail)
-        console.log(ProfilePasword)
-        const salt = await bcrypt.genSalt(10)
-        const pass = await bcrypt.hash(ProfilePasword, salt)
-        const sql = `UPDATE Profile SET ProfileEmail = ? WHERE ProfilePasword = ? `;
-        con.query(sql, [ProfileEmail, pass], function (err, result) {
-            if (err) res.status(400).json({
-                success: false,
-                message: err
-            });
-            console.log(result)
-            if (result.length != 0) {
-                res.status(200).json({
-                    success: true,
-                    message: pass
-                }); res.end();
-            }
-            else {
-                res.status(200).json({
-                    success: false,
-                    message: "doesnt exist."
-                }); res.end();
-            }
+        res.status(200).json({
+            message: 'Login successful',
+            token: token,
+            ProfileID: user.ProfileID,
+            ProfileName: user.ProfileName,
+            ProfileEmail: user.ProfileEmail,
         });
     }
-}
-const retriveUsers=(req,res)=>{
 
-    const sql = `SELECT * FROM profile`;
-    con.query(sql, function (err, result) {
-        if (err) res.status(400).json({
-            success: false,
-            message: err
+    async signUp(req, res) {
+        const { profileName, profileEmail, profilePasword } = req.body;
+        const hashedPassword = await hashService.makeHash(profilePasword);
+        const passwordCode = await hashService.makeHash(new Date().getTime().toString());
+
+        await userService.createUser(profileName, profileEmail, hashedPassword, passwordCode);
+
+        res.status(200).json({
+            success: true,
+            message: 'User created.',
+            token: passwordCode,
         });
-        console.log(result)
-        if (result.length != 0) {
-            res.status(200).json({
-                success: true,
-                message: result
-            }); res.end();
+    }
+
+    async forgetPassword(req, res) {
+        const { profileEmail, passwordCode } = req.body;
+        const user = await userService.findUserByEmail(profileEmail);
+
+        if (user && user.PASSWORDCode === passwordCode) {
+            res.status(200).json({ success: true, message: 'Success.' });
+        } else {
+            res.status(400).json({ success: false, message: 'Does not exist.' });
         }
-        else {
-            res.status(400).json({
-                success: false,
-                message: "doesnt exist."
-            }); res.end();
-        }
-    });
+    }
+
+    async updatePassword(req, res) {
+        const { profileEmail, profilePassword } = req.body;
+        const hashedPassword = await hashService.makeHash(profilePassword);
+
+        await userService.updatePassword(profileEmail, hashedPassword);
+
+        res.status(200).json({ success: true, message: 'Password updated.' });
+    }
+
+    async retrieveUsers(req, res) {
+        const users = await userService.findUsers();
+        res.status(200).json({ success: true, message: users });
+    }
 }
-module.exports = { login, signUp, forgetPassword, updatePassword,retriveUsers }
+
+module.exports = {AuthController};

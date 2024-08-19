@@ -1,25 +1,23 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 export default function ListComponent({ onCollaboratorsChange }) {
   const location = useLocation();
   const data = location.state;
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [taskCollaborate, setTaskCollaborate] = useState([]);
   const [selectedEmails, setSelectedEmails] = useState(new Set());
 
   useEffect(() => {
-    const fetchMyProjects = async () => {
+    const fetchCollaborators = async () => {
       const profileID = localStorage.getItem("ProfileID");
       const projectID = data?.ProjectID;
 
@@ -32,13 +30,13 @@ export default function ListComponent({ onCollaboratorsChange }) {
         const response = await axios.get("http://localhost:2003/project/collabortors/retrive", {
           params: { ProjectID: projectID }
         });
-        setTaskCollaborate(response.data.message); // Adjust based on response structure
+        setTaskCollaborate(response.data.message || []); // Adjust based on response structure
       } catch (error) {
-        console.error("Error fetching projects:", error);
+        console.error("Error fetching collaborators:", error);
       }
     };
 
-    fetchMyProjects();
+    fetchCollaborators();
   }, [data?.ProjectID]);
 
   const handleListItemClick = (event, index) => {
@@ -54,24 +52,27 @@ export default function ListComponent({ onCollaboratorsChange }) {
         updated.delete(ProfileEmail);
       }
       onCollaboratorsChange(updated);
-
       return updated;
     });
   };
 
   return (
     <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      <List component="nav" aria-label="main mailbox folders">
+      <List component="nav" aria-label="collaborators">
         {taskCollaborate.map((user, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={user.ProfileEmail}>
             <ListItemButton
               selected={selectedIndex === index}
               onClick={(event) => handleListItemClick(event, index)}
+              sx={{ borderRadius: 1 }} // Rounded corners
             >
               <ListItemIcon>
                 <Checkbox
+                  edge="start"
                   checked={selectedEmails.has(user.ProfileEmail)}
                   onChange={(event) => handleCheckboxChange(event, user.ProfileEmail)}
+                  tabIndex={-1}
+                  disableRipple
                 />
               </ListItemIcon>
               <ListItemText primary={user.ProfileEmail} />

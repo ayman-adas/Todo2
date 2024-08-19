@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Box, Stack, Grid, TextField, Snackbar } from '@mui/material';
+import { Button, Box, Stack, Grid, TextField, Snackbar, Typography, Divider } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router-dom";
 import ComponentSearch from "./SearchCompnent";
-import Divider from '@mui/material/Divider';
 import ProjectsCompnent from './project/ProjectsCompnent';
 import io from "socket.io-client";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const socket = io("http://localhost:4000"); // Replace with your server URL
 
@@ -24,25 +24,21 @@ const HomeComponent = () => {
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const navigate = useNavigate();
 
-    // Use effect to simulate a one-time refresh
     useEffect(() => {
         if (isFirstLoad) {
             setIsFirstLoad(false);
-            // Trigger refresh logic here, such as re-fetching data
             socket.emit('refresh', {}); // Custom event to trigger refresh on the server
         }
     }, [isFirstLoad]);
 
     const handleCreate = (e) => {
         e.preventDefault();
-
         if (projectName.trim() === '') {
             setSnackbarMessage("Please insert project name");
             setOpenSnackbar(true);
             return;
         }
-
-        socket.emit('send_data', {
+        socket.emit("send_data", {
             data: {
                 ProjectName: projectName,
                 isPrivate: isPrivate,
@@ -81,31 +77,86 @@ const HomeComponent = () => {
 
     return (
         <>
-            <Stack direction="row" gap={10}>
-                <Box marginTop={5} marginLeft={13} marginRight={30} width={100}>
-                    <Button variant="contained" size="large" onClick={handleSignout} fullWidth autoFocus>
-                        Signout
-                    </Button>
-                </Box>
-                <Box marginTop={5} marginLeft={23} marginRight={30} width={100}>
-                    <ComponentSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-                </Box>
-                <div onClick={handleAccountProfile}>
-                    <Box marginTop={0} marginLeft={50} marginRight={30} width={120}>
-                        <AccountCircleIcon sx={{ fontSize: 130 }} />
-                        <label style={{ paddingLeft: 25 }}>Profiling Page</label>
-                    </Box>
-                </div>
-            </Stack>
-            <Divider component="li" />
+            <Box py={2} px={3} className="container">
+            
+        <Stack
+            direction="row"
+            spacing={3}
+            alignItems="center"
+            sx={{
+                p: 2,
+                mb: 4,
+                backgroundColor: 'grey',
+                borderRadius: 2,
+                boxShadow: 3,
+                justifyContent: 'space-between',
+            }}
+        >
+            {/* Sign Out Button */}
+            <Button
+                variant="contained"
+                size="large"
+                onClick={handleSignout}
+                sx={{
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    borderRadius: 1,
+                    boxShadow: 2,
+                    '&:hover': {
+                        bgcolor: 'primary.dark',
+                        boxShadow: 4,
+                    },
+                }}
+            >
+                Sign Out
+            </Button>
 
-            <Box width={200} paddingLeft={100}>
-                <form onSubmit={handleCreate}>
-                    <Box marginBottom={5}>
-                        <Box display="flex" justifyContent="center" alignItems="center">
-                            <h1>New Project</h1>
-                        </Box>
-                        <Box height={5}></Box>
+            {/* Search Component */}
+            <Box
+                sx={{
+                    flexGrow: 1,
+                    p: 1,
+                    borderRadius: 1,
+                    boxShadow: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: 'background.paper',
+                }}
+            >
+                <ComponentSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            </Box>
+
+            {/* Profile Box */}
+            <Box
+                onClick={handleAccountProfile}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    p: 2,
+                    borderRadius: 2,
+                    backgroundColor: 'background.default',
+                    boxShadow: 2,
+                    transition: 'background-color 0.3s, box-shadow 0.3s',
+                    '&:hover': {
+                        backgroundColor: 'grey.100',
+                        boxShadow: 4,
+                    },
+                }}
+            >
+                <AccountCircleIcon sx={{ fontSize: 120, mb: 1 }} />
+                <Typography variant="h6" textAlign="center">
+                    Profile
+                </Typography>
+            </Box>
+        </Stack>
+                <Divider />
+                <Box mt={4}>
+                    <Typography variant="h4" align="center" gutterBottom>
+                        New Project
+                    </Typography>
+                    <Box component="form" onSubmit={handleCreate} mt={2} p={2} border={1} borderColor="grey.300" borderRadius={2} boxShadow={3}>
                         <TextField
                             required
                             fullWidth
@@ -116,33 +167,30 @@ const HomeComponent = () => {
                             autoComplete="ProjectName"
                             value={projectName}
                             onChange={(e) => setProjectName(e.target.value)}
+                            margin="normal"
                         />
-                        <Box height={5}></Box>
-                        <FormLabel id="demo-row-radio-buttons-group-label">Is Private</FormLabel>
+                        <FormLabel component="legend">Is Private</FormLabel>
                         <RadioGroup
                             row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
+                            aria-labelledby="privacy-radio-group"
+                            name="privacy"
                             value={isPrivate}
                             onChange={(e) => setIsPrivate(e.target.value)}
+                            margin="normal"
                         >
                             <FormControlLabel value="true" control={<Radio />} label="True" />
                             <FormControlLabel value="false" control={<Radio />} label="False" />
                         </RadioGroup>
-                        <Box width={250} paddingRight={20}>
-                            <Button variant="contained" size="large" type="submit" fullWidth autoFocus>
-                                Create Project
-                            </Button>
-                        </Box>
+                        <Button variant="contained" size="large" type="submit" fullWidth>
+                            Create Project
+                        </Button>
                     </Box>
-                </form>
-            </Box>
-            <Divider component="li" />
-            <Box display="flex" justifyContent="center" alignItems="center" paddingRight={15}>
-                <h1>Projects List</h1>
-            </Box>
-            <Box marginTop={5} marginLeft={3} marginRight={15}>
-                <Grid container spacing={30} rowSpacing={20} columnSpacing={{ xs: 15, sm: 12, md: 13 }}>
+                </Box>
+                <Divider sx={{ my: 4 }} />
+                <Typography variant="h4" align="center" gutterBottom>
+                    Projects List
+                </Typography>
+                <Grid container spacing={3}>
                     {filteredProjects.map((project, index) => (
                         <Grid item key={index} xs={12} sm={6} md={3}>
                             <ProjectsCompnent
@@ -154,12 +202,16 @@ const HomeComponent = () => {
                     ))}
                 </Grid>
             </Box>
-
             <Snackbar
                 open={openSnackbar}
                 autoHideDuration={6000}
                 onClose={() => setOpenSnackbar(false)}
                 message={snackbarMessage}
+                action={
+                    <Button color="inherit" onClick={() => setOpenSnackbar(false)}>
+                        Close
+                    </Button>
+                }
             />
         </>
     );

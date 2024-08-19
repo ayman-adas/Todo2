@@ -1,97 +1,103 @@
-import React,{useState} from "react";
-import { Box, Container, Stack, TextField } from "@mui/material";
-import Button from '@mui/material/Button';
+import React, { useState } from "react";
+import { Box, Container, Stack, TextField, Typography, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function LoginFomCompmonent() {
-    const navigate = useNavigate()
-    var  [ProfileEmail, setProfileEmail] = useState("");
-    var [ProfilePasword, setProfilePasword] = useState("");
-      
-    const Navigate = useNavigate()
+export default function LoginFormComponent() {
+    const navigate = useNavigate();
+    const [profileEmail, setProfileEmail] = useState("");
+    const [profilePassword, setProfilePassword] = useState("");
+
     const handleLogin = (e) => {
-        console.log('login')
         e.preventDefault();
-      console.log(ProfileEmail)
-      console.log(ProfilePasword)
         axios
             .post("http://localhost:2003/login", {
-                ProfileEmail: ProfileEmail,
-                ProfilePasword: ProfilePasword,
-
+                loginEmail: profileEmail,
+                loginPassword: profilePassword,
             })
             .then((result) => {
-
-
-                console.log("Login successfully :", result.data);
-                console.log(result.data)
-                localStorage.setItem('ProfileID',result.data.ProfileID)
-                console.log(result.data.ProfileID)
-
-                localStorage.setItem('ProfileName',result.data.ProfileName)
-                localStorage.setItem('ProfileEmail',result.data.ProfileEmail)
-
-                localStorage.setItem('token',result.data.result)
-                Navigate("/",);
-                window.location.reload();
-
+                console.log("Login successfully:", result.data);
+                localStorage.setItem('ProfileID', result.data.ProfileID);
+                localStorage.setItem('ProfileName', result.data.ProfileName);
+                localStorage.setItem('ProfileEmail', result.data.ProfileEmail);
+                localStorage.setItem('token', result.data.result);
+                navigate("/");
             })
             .catch((err) => {
-                console.log(err.message);
+                console.error("Login error:", err.message);
             });
     };
 
     return (
-        <>
-        <form method="post"  action="http://localhost:2003/login">
-            <Box  marginBottom={14} >
-                <Box display="flex"
-                    justifyContent="center"
-                    alignItems="center">  <h1>Login Page</h1></Box>
-                <Box height={35}></Box>
+        <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="100vh"
+            p={3}
+        >
+            <Container
+                maxWidth="xs"
+                component="form"
+                onSubmit={handleLogin}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    p: 4,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Login
+                </Typography>
 
                 <TextField
                     required
                     fullWidth
                     id="email"
                     label="Email Address"
-                    name="ProfileEmail"
+                    type="email"
                     autoComplete="email"
-                    autoFocus
-                    onChange={(e) => ProfileEmail = (e.target.value)}
-                    />
-                <Box height={35}></Box>
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(e) => setProfileEmail(e.target.value)}
+                />
+
                 <TextField
                     required
                     fullWidth
-                    name="ProfilePasword"
+                    id="password"
                     label="Password"
                     type="password"
-                    id="password"
                     autoComplete="current-password"
-                    onChange={(e) => ProfilePasword = (e.target.value)}
-
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(e) => setProfilePassword(e.target.value)}
                 />
-                <Box height={15}></Box>
 
-                <Container>
-                    <Button variant="text" onClick={() => navigate("/forgetPassword")} fullWidth>  forget pass</Button>
-                </Container>
+                <Button
+                    variant="contained"
+                    size="large"
+                    type="submit"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                >
+                    Login
+                </Button>
 
-                <Box marginTop={10}
-                    marginLeft={30} marginRight={30} width={200}>
-                    <Button variant="contained" size="large" type="submit" onClick={handleLogin} fullWidth autoFocus>
-                        Login                    </Button>
-                </Box>
-                <Box height={35}></Box>
-                <Stack direction="row" gap={0}>
-               <h3> dont have an account: </h3>
-                   <Button variant="text" size="large"  onClick={() => navigate("/signUp")}   autoFocus>
-                        sign up                    </Button>
-               </Stack>
-            </Box>
-            </form>
-        </>
-    )
+                <Stack direction="row" spacing={1} mt={2} mb={2} alignItems="center">
+                    <Typography variant="body2">Don't have an account?</Typography>
+                    <Link href="#" onClick={() => navigate("/signUp")}>
+                        <Button variant="text">Sign Up</Button>
+                    </Link>
+                </Stack>
+
+                <Link href="#" onClick={() => navigate("/forgetPassword")}>
+                    Forgot Password?
+                </Link>
+            </Container>
+        </Box>
+    );
 }

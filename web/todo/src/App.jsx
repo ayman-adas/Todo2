@@ -17,7 +17,7 @@ import ProjectView from './view/Project/ProjectView';
 import AddTaskView from './view/Tasks/AddTaskView';
 import ProjectCollaborator from "./view/Project/ProjectCollaborator"
 // const socket = io.connect("http://localhost:4000");
-
+import './index.css'
 function App() {
 
   return (

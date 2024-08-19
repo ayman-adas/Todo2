@@ -1,81 +1,58 @@
-import React from "react";
-import { Box, Stack, TextField } from "@mui/material";
-import Button from '@mui/material/Button';
+import React, { useState } from "react";
+import { Box, Stack, TextField, Button, Radio, RadioGroup, FormControlLabel, FormLabel, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
 
-export default function NewProjectComonent() {
-    var [ProjectName,] = useState("");
-    var [isPrivate, setProfilePasword] = useState("");
+export default function NewProjectComponent() {
+    const [projectName, setProjectName] = useState("");
+    const [isPrivate, setIsPrivate] = useState("true"); // Default value set to "true"
+    const navigate = useNavigate();
 
-
-    const Navigate = useNavigate()
     const handleCreate = (e) => {
-        console.log('create')
         e.preventDefault();
-        console.log(ProjectName)
-        console.log(isPrivate)
-        console.log(localStorage.getItem("ProfileID"))
-        axios
-            .post("http://localhost:2003/project/create", {
-                ProjectName: ProjectName,
-                isPrivate: isPrivate,
-                ProfileID:localStorage.getItem("ProfileID")
 
-            })
-            .then((result) => {
-                Navigate("/");
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
+        axios.post("http://localhost:2003/project/create", {
+            ProjectName: projectName,
+            isPrivate: isPrivate,
+            ProfileID: localStorage.getItem("ProfileID"),
+        })
+        .then((result) => {
+            navigate("/");
+        })
+        .catch((err) => {
+            console.error("Error creating project:", err.message);
+        });
     };
 
     return (
-        <>
-            <form>
+        <Box component="form" onSubmit={handleCreate} sx={{ maxWidth: 600, mx: 'auto', my: 4, p: 3, borderRadius: 1, boxShadow: 3 }}>
+            <Typography variant="h4" align="center" gutterBottom>
+                Create New Project
+            </Typography>
 
+            <TextField
+                required
+                fullWidth
+                label="Project Name"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                sx={{ mb: 2 }}
+            />
 
-                <Box marginBottom={5} >
-                    <Box display="flex"
-                        justifyContent="center"
-                        alignItems="center">  <h1>Create New Project Page</h1></Box>
-                    <Box height={35}></Box>
-                    <TextField
-
-                        required
-                        fullWidth
-                        name="ProjectName"
-                        label="Project Name"
-                        type="text"
-                        id="ProjectName"
-                        autoComplete="ProjectName"
-                        onChange={(e) => ProjectName = (e.target.value)}
-                    />                    <Box height={35}></Box>
-
-<FormLabel id="demo-row-radio-buttons-group-label">IS private</FormLabel>
-<RadioGroup
-        row
-        aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
->
-        <FormControlLabel value="true" control={<Radio />} label="true"  onChange={(e) => isPrivate = (e.target.value)}/>
-        <FormControlLabel value="false" control={<Radio />} label="false"  onChange={(e) => isPrivate = (e.target.value)}/>
+            <FormLabel sx={{ mb: 1 }}>Is Private</FormLabel>
+            <RadioGroup
+                row
+                value={isPrivate}
+                onChange={(e) => setIsPrivate(e.target.value)}
+                sx={{ mb: 2 }}
+            >
+                <FormControlLabel value="true" control={<Radio />} label="True" />
+                <FormControlLabel value="false" control={<Radio />} label="False" />
             </RadioGroup>
-                    <Box ></Box>
-                    <Box marginTop={5}
-                        marginLeft={30} marginRight={30} width={100}>
-                        <Button variant="contained" size="large" type="submit" onClick={handleCreate} fullWidth autoFocus>
-                            Create Project                    </Button>
-                    </Box>
-                </Box>
-            </form>
 
-        </>
-    )
+            <Button variant="contained" type="submit" fullWidth>
+                Create Project
+            </Button>
+        </Box>
+    );
 }
