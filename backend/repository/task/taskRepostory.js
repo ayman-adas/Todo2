@@ -2,9 +2,9 @@ const { ITaskRepository } = require('./interfaceTask')
 const { MySql } = require('../../services/database');
 const mysql = new MySql()
 class TaskReposotory extends ITaskRepository {
-    async CreateTask({ taskName, taskDescription, taskImage, taskDueDate, ProjectID, taskCreated }) {
+    async createTask({ taskName, taskDescription, taskImage, taskDueDate, ProjectID, taskCreated }) {
         const sql = `INSERT INTO task (taskName,taskDescription,taskImage,taskDueDate,taskStatus,ProjectID,TaskCreatedTime) VALUES (?,  ?,?, ?,false,?,?)`;
-        const result = await mysql.query(sql, [taskName, taskDescription, taskImage, formattedDueDate, ProjectID, currentDate],)
+        const result = await mysql.query(sql, [taskName, taskDescription, taskImage, taskDueDate, ProjectID, taskCreated],)
 
         return result.insertId;
     }

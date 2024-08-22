@@ -4,6 +4,7 @@ import HomeCompmonent from "../compnent/HomeCompnent";
 import { Box } from "@mui/material";
 import { CSSTransition } from "react-transition-group";
 import './home.css'
+import HomeAppBar from "../compnent/HomeAppBar";
 export default function HomeView() {
   const [show, setShow] = React.useState(false);
 
@@ -15,7 +16,7 @@ export default function HomeView() {
 
   return (
     <>
-      <TodoAppBar />
+      <HomeAppBar />
       <CSSTransition
         in={show}
         timeout={1000} // Duration of the animation
@@ -27,7 +28,7 @@ export default function HomeView() {
  
       <Box
         sx={{
-          backgroundImage: `url("src/assets/login.jpg")`,
+          backgroundImage: `url("https://img.freepik.com/free-vector/gradient-black-background-with-wavy-lines_23-2149151738.jpg")`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           width: "100vw", // Make sure it covers full viewport width

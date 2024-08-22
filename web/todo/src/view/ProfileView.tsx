@@ -78,7 +78,7 @@ export default function ProfileView() {
       <TodoAppBar />
       <Box
         sx={{
-          backgroundImage: `url("src/assets/login.jpg")`,
+          backgroundImage: `url("https://img.freepik.com/free-vector/gradient-black-background-with-wavy-lines_23-2149151738.jpg")`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           width: "100vw", // Make sure it covers full viewport width
@@ -96,16 +96,14 @@ export default function ProfileView() {
           <ProfileDataComponent />
         </Stack>
         <Divider />
-        <h2 className="text-center my-4">My Projects</h2>
-        <Box>
-          <Grid
-            container
-            spacing={30}
-            rowSpacing={20}
-            columnSpacing={{ xs: 15, sm: 12, md: 13 }}
-          >
-            {MyProjects.map((project) => (
-              <Grid item xs={12} sm={6} md={3} className="focus-ring-secondary">
+        <h2 className="text-center my-4" style={{ color: "white" }}>
+          My Projects
+        </h2>
+        <Box py={2} px={3} className="container" >
+
+          <Grid container spacing={3}>
+            {MyProjects.map((project,index) => (
+              <Grid item key={index} xs={12} sm={6} md={3}>
                 <ProjectsCompnent
                   ProjectID={project.ProjectID}
                   ProjectName={project.ProjectName}
@@ -118,26 +116,24 @@ export default function ProfileView() {
         <Box height={50}></Box>
 
         <Divider />
-        <h2 className="text-center my-4">Projects That I Collaborate</h2>
+        <h2 className="text-center my-4" style={{ color: "white" }}>
+          Projects That I Collaborate
+        </h2>
         <span className="container-fluid">
-          <Box>
-            <Grid
-              container
-              spacing={30}
-              rowSpacing={20}
-              columnSpacing={{ xs: 15, sm: 12, md: 13 }}
-            >
-              {ProjectsCollaborate.map((project) => (
-                <Grid item xs={12} sm={6} md={3}>
+          <Box  className="container" sx={{ }}>
+
+            <Grid container spacing={3}>
+              {ProjectsCollaborate.map((project,index) => (
+                <Grid item key={index} xs={12} sm={6} md={3}>
                   <ProjectsCompnent
                     ProjectName={project.ProjectName}
                     Author={project.ProjectCreatedTime}
-                    ProjectId={project.ProjectId}
+                    ProjectID={project.ProjectId}
                   />
                 </Grid>
               ))}
             </Grid>
-          </Box>
+            </Box>
         </span>
       </Box>
     </>

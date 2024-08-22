@@ -20,7 +20,8 @@ export default function DatePickerCompnent({ onDateChange }) {
         label="Due Date"
         value={selectedDate}
         onChange={handleDateChange}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => <TextField {...params} />
+      }sx={{backgroundColor:"white"}}
       />
     </LocalizationProvider>
   );

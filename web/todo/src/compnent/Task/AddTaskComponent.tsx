@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import { Box, TextField, Button, Typography, Container } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import DatePickerCompnent from "../DatePickerCompnent";
@@ -19,9 +19,10 @@ export default function NewTaskComponent() {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
+      console.log(taskName)
       const result = await axios.post("http://localhost:2003/task/create", {
-        taskName,
-        taskDescription,
+        taskName:taskName,
+        taskDescription:taskDescription,
         taskImage: imageSrc,
         taskDueDate: selectedDate,
         ProjectID: data.ProjectID,
@@ -57,7 +58,9 @@ export default function NewTaskComponent() {
   };
 
   return (
-    <Box component="form" onSubmit={handleCreate} sx={{ maxWidth: 600, mx: 'auto', my: 4, p: 3, borderRadius: 1, boxShadow: 3, paddingTop:10 }}>
+    <Box component="form" onSubmit={handleCreate} sx={{ maxWidth: 600, mx: 'auto', my: 4, p: 3, color:"white" ,  borderRadius: 5,
+      boxShadow:8,}}>
+    
       <Typography variant="h4" align="center" gutterBottom>
         Create New Task
       </Typography>
@@ -68,7 +71,7 @@ export default function NewTaskComponent() {
         label="Task Name"
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
-        sx={{ mb: 2 }}
+        sx={{ mb: 2 ,color:"white",backgroundColor:"white"}}
       />
 
       <TextField
@@ -77,7 +80,7 @@ export default function NewTaskComponent() {
         label="Task Description"
         value={taskDescription}
         onChange={(e) => setTaskDescription(e.target.value)}
-        sx={{ mb: 2 }}
+        sx={{ mb: 2,color:"white",backgroundColor:"white" }}
       />
 
       <AddImageCompnent onImageChange={handleImageChange} />

@@ -42,7 +42,7 @@ const ProfileDataComponent = () => {
                     }
                 />
             )}
-            <h2 style={{ marginTop: 5, marginLeft: 25 }}>
+            <h2 style={{ marginTop: 5, marginLeft: 25 ,color:"white"}}>
                 {localStorage.getItem('ProfileName')}
             </h2>
         </Box>

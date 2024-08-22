@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Box, Stack, Grid, TextField, Snackbar, Typography, Divider } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router-dom";
-import ComponentSearch from "./SearchCompnent";
 import ProjectsCompnent from './project/ProjectsCompnent';
 import io from "socket.io-client";
 import Radio from '@mui/material/Radio';
@@ -18,7 +16,6 @@ const HomeComponent = () => {
     const [isPrivate, setIsPrivate] = useState("true");
     const [projects, setProjects] = useState([]);
     const [filteredProjects, setFilteredProjects] = useState([]);
-    const [searchQuery, setSearchQuery] = useState("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -58,108 +55,32 @@ const HomeComponent = () => {
         };
     }, [socket]);
 
-    useEffect(() => {
-        setFilteredProjects(
-            projects.filter(project =>
-                project.ProjectName.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        );
-    }, [searchQuery, projects]);
+    // useEffect(() => {
+    //     setFilteredProjects(
+    //         projects.filter(project =>
+    //             project.ProjectName.toLowerCase().includes(searchQuery.toLowerCase())
+    //         )
+    //     );
+    // }, [searchQuery, projects]);
 
-    const handleSignout = () => {
-        localStorage.clear();
-        navigate(`/`);
-    };
-
-    const handleAccountProfile = () => {
-        navigate(`/profile`);
-    };
 
     return (
         <>
-            <Box py={2} px={3} className="container">
-            
-        <Stack
-            direction="row"
-            spacing={3}
-            alignItems="center"
-            sx={{
-                p: 2,
-                mb: 4,
-                backgroundColor: 'grey',
-                borderRadius: 2,
-                boxShadow: 3,
-                justifyContent: 'space-between',
-            }}
-        >
-            {/* Sign Out Button */}
-            <Button
-                variant="contained"
-                size="large"
-                onClick={handleSignout}
-                sx={{
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                    borderRadius: 1,
-                    boxShadow: 2,
-                    '&:hover': {
-                        bgcolor: 'primary.dark',
-                        boxShadow: 4,
-                    },
-                }}
-            >
-                Sign Out
-            </Button>
+            <Box py={2} px={3} className="container" sx={{ pt: 10 }}>
 
-            {/* Search Component */}
-            <Box
-                sx={{
-                    flexGrow: 1,
-                    p: 1,
-                    borderRadius: 1,
-                    boxShadow: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: 'background.paper',
-                }}
-            >
-                <ComponentSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            </Box>
 
-            {/* Profile Box */}
-            <Box
-                onClick={handleAccountProfile}
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    p: 2,
-                    borderRadius: 2,
-                    backgroundColor: 'background.default',
-                    boxShadow: 2,
-                    transition: 'background-color 0.3s, box-shadow 0.3s',
-                    '&:hover': {
-                        backgroundColor: 'grey.100',
-                        boxShadow: 4,
-                    },
-                }}
-            >
-                <AccountCircleIcon sx={{ fontSize: 120, mb: 1 }} />
-                <Typography variant="h6" textAlign="center">
-                    Profile
-                </Typography>
-            </Box>
-        </Stack>
+                {/* Sign Out Button */}
+
                 <Divider />
                 <Box mt={4}>
-                    <Typography variant="h4" align="center" gutterBottom>
-                        New Project
+                    <Typography variant="h4" align="center" gutterBottom color={"white"} >
+                        Add New Project
                     </Typography>
-                    <Box component="form" onSubmit={handleCreate} mt={2} p={2} border={1} borderColor="grey.300" borderRadius={2} boxShadow={3}>
+                    <Stack direction="row" spacing={20} component="form" onSubmit={handleCreate}  p={2} border={2} borderColor="grey.300"
+                        borderRadius={5} boxShadow={3} color={"white"} pl={3} >
                         <TextField
+                        
                             required
-                            fullWidth
                             name="ProjectName"
                             label="Project Name"
                             type="text"
@@ -168,8 +89,11 @@ const HomeComponent = () => {
                             value={projectName}
                             onChange={(e) => setProjectName(e.target.value)}
                             margin="normal"
+                            style={{ color: "white", backgroundColor: "white",width:500 }}
                         />
-                        <FormLabel component="legend">Is Private</FormLabel>
+                        <Box>
+                        <h5 component="legend" sx={{ color: "white" }}
+                        >Is Private</h5>
                         <RadioGroup
                             row
                             aria-labelledby="privacy-radio-group"
@@ -177,17 +101,22 @@ const HomeComponent = () => {
                             value={isPrivate}
                             onChange={(e) => setIsPrivate(e.target.value)}
                             margin="normal"
+                            sx={{ color: "white", pl: 1 }}
                         >
-                            <FormControlLabel value="true" control={<Radio />} label="True" />
-                            <FormControlLabel value="false" control={<Radio />} label="False" />
+                            <FormControlLabel value="true" control={<Radio />} label="True" sx={{ color: "white", backgroundColor: "lightgrey", spacing:1 }}
+                            />
+                            <FormControlLabel value="false" control={<Radio />} label="False" sx={{ color: "white", backgroundColor: "lightgrey" }} />
                         </RadioGroup>
-                        <Button variant="contained" size="large" type="submit" fullWidth>
+                        </Box>
+                        <Button variant="contained" size="large" type="submit" >
                             Create Project
                         </Button>
-                    </Box>
+                        
+                    </Stack>
                 </Box>
-                <Divider sx={{ my: 4 }} />
-                <Typography variant="h4" align="center" gutterBottom>
+                <Divider   />
+                <br></br>
+                <Typography variant="h4" align="center" gutterBottom color={"white"}>
                     Projects List
                 </Typography>
                 <Grid container spacing={3}>

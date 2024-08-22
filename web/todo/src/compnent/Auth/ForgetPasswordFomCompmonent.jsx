@@ -45,6 +45,7 @@ export default function ForgetPasswordFormComponent() {
                     p: 4,
                     borderRadius: 2,
                     boxShadow: 3,
+                    backgroundColor:"white"
                 }}
             >
                 <Typography variant="h4" component="h1" gutterBottom>

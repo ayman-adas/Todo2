@@ -28,12 +28,13 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
       display="grid"
       gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
       className="p-3"
+      justifyContent={"start"}
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="d-flex align-items-center justify-content-center"
+        className="d-flex align-items-start justify-content-start"
       >
         <Typography
           component={"span"}
@@ -62,9 +63,9 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
               background: "linear-gradient(to bottom right, #007bff, #6c757d)", // Bootstrap primary and secondary colors
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
+              alignItems: 'start',
+              justifyContent: 'start',
+              textAlign: 'start',
               overflow: 'hidden',
               color: '#fff', // White text for contrast
               padding: 2,
@@ -74,10 +75,10 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
               },
             }}
           >
-            <Typography variant="h6" sx={{ mb: 1 }}>
+            <Typography variant="h5" sx={{ mb: 1, fontStyle:"italic" }}>
               {ProjectName}
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body1">
               {Author}
             </Typography>
           </Card>

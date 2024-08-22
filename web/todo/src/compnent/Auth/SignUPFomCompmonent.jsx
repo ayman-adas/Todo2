@@ -34,6 +34,8 @@ export default function SignUpFormComponent() {
             justifyContent="center"
             alignItems="center"
             minHeight="100vh"
+            color="white"
+
             p={3}
         >
             <Container
@@ -47,9 +49,10 @@ export default function SignUpFormComponent() {
                     p: 4,
                     borderRadius: 2,
                     boxShadow: 3,
+                    backgroundColor:"white"
                 }}
             >
-                <Typography variant="h4" component="h1" gutterBottom>
+                <Typography variant="h4" component="h1" gutterBottom color={"black"}>
                     Sign Up
                 </Typography>
 
@@ -101,7 +104,7 @@ export default function SignUpFormComponent() {
                 </Button>
 
                 <Stack direction="row" spacing={1} mt={2} alignItems="center">
-                    <Typography variant="body2">Already have an account?</Typography>
+                    <Typography variant="body2" color={"black"}>Already have an account?</Typography>
                     <Link href="#" onClick={() => navigate("/login")}>
                         <Button variant="text">Login</Button>
                     </Link>

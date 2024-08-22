@@ -8,35 +8,17 @@ class Tasks {
 
         try {
             // Split the date into parts
-            const parts = taskDueDate.split(' ');
-            if (parts.length !== 3) {
-                throw new Error('Invalid date format');
-            }
-
-            const day = parts[0];
-            const month = parts[1];
-            const year = parts[2];
-
-            // Check if parts are valid numbers
-            if (isNaN(day) || isNaN(month) || isNaN(year)) {
-                throw new Error('Invalid date components');
-            }
-
-            // Format the date as YYYY-MM-DD
-            formattedDueDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
             // Check if the date is valid
             const dueDate = new Date(formattedDueDate);
-            if (isNaN(dueDate.getTime())) {
-                throw new Error('Invalid date');
-            }
+
         } catch (error) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid taskDueDate: ' + error.message
             });
         }
-        const result = await taskRepo.createTask(taskName, taskDescription, taskImage, formattedDueDate, ProjectID, currentDate)
+        const result = await taskRepo.createTask({taskName: taskName,taskDescription: taskDescription,taskImage: taskImage, taskDueDate: currentDate,ProjectID: ProjectID,currentDate: currentDate})
 
         const taskID = result.insertId;
 
@@ -106,14 +88,14 @@ class Tasks {
             }); res.end();
         }
     }
-    retriveTasksReleaetedToProject =async (req, res) => {
+    retriveTasksReleaetedToProject = async (req, res) => {
         const { ProjectID } = req.query
-    const result=await taskRepo.retriveTasksReleaetedToProject(ProjectID)
+        const result = await taskRepo.retriveTasksReleaetedToProject(ProjectID)
 
-            res.status(200).json({
-                success: true,
-                message: result
-            });
+        res.status(200).json({
+            success: true,
+            message: result
+        });
     }
 }
 module.exports = {

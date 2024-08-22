@@ -11,7 +11,7 @@ return (
             
             <Box
                  sx={{
-                    backgroundImage: `url("src/assets/login.jpg")`,
+                    backgroundImage: `url("https://t4.ftcdn.net/jpg/07/05/56/21/360_F_705562152_WFSrWPNw6TqrxQ3MJzWzaZ1oeH3jLtUu.jpg")`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                     width: "100vw", // Make sure it covers full viewport width

@@ -38,6 +38,7 @@
     "react-axios": "^2.0.6",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.3.1",
+    "react-draggable": "^4.4.6",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.52.2",
     "react-image-lightbox": "^5.1.4",

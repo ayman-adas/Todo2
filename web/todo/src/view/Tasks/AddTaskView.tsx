@@ -11,7 +11,7 @@ return (
             
     <Box
               sx={{
-                backgroundImage: `url("src/assets/login.jpg")`,
+                backgroundImage: `url("https://img.freepik.com/free-vector/gradient-black-background-with-wavy-lines_23-2149151738.jpg")`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 width: "100vw", // Make sure it covers full viewport width
