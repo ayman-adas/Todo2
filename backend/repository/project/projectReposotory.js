@@ -35,17 +35,17 @@ class ProjectRepository extends IProjectRepository {
 
     async retrieveProjectCollaborators(projectId) {
         const sql = `SELECT * FROM projectcollaborators INNER JOIN Profile ON projectcollaborators.ProfileID = Profile.ProfileID WHERE ProjectID = ?`;
-        return await this.mySql.query(sql, parseInt([projectId]));
+        return await this.mySql.query(sql, projectId);
     }
 
     async retrievePublicProjects() {
-        const sql = `SELECT P.ProjectName, Profile.ProfileName, P.ProjectID, COUNT(*) OVER () AS TotalCount FROM Project P INNER JOIN Profile ON P.ProfileID = Profile.ProfileID WHERE P.IsPrivate = false ORDER BY ProjectCreatedTime;`;
+        const sql = `SELECT P.ProjectName, Profile.ProfileName, P.ProjectID,P.ProfileID, COUNT(*) OVER () AS TotalCount FROM Project P INNER JOIN Profile ON P.ProfileID = Profile.ProfileID WHERE P.IsPrivate = false ORDER BY ProjectCreatedTime;`;
         return await this.mySql.query(sql);
     }
 
     async retrieveProjectsCollaborating(profileID) {
         console.log(profileID)
-        const sql = `SELECT *  FROM Project P INNER JOIN projectcollaborators PC ON P.ProjectID = PC.ProjectID WHERE PC.ProfileID = ? ORDER BY ProjectCreatedTime ;`;
+        const sql = `SELECT *  FROM Project P INNER JOIN projectcollaborators PC INNER join profile pr ON P.ProjectID = PC.ProjectID AND p.ProfileID=pr.ProfileID WHERE PC.ProfileID = ? ORDER BY ProjectCreatedTime ;`;
         const result = await this.mySql.query(sql, [(profileID),]);
         console.log(result)
         return result

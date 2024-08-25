@@ -30,9 +30,10 @@ export default function NewTaskComponent() {
         headers: { 'Content-Type': 'application/json' }, // Use correct header
       });
 
-      console.log("Task created successfully:", result.data);
+      console.log("Task created successfully:", result.data.message);
 
       for (const collaborator of selectedCollaborators) {
+        console.log(collaborator)
         await axios.post("http://localhost:2003/task/insert/collaborator", {
           taskID: result.data.message,
           ProfileEmail: collaborator,

@@ -28,7 +28,7 @@ export default function ProfileView() {
           {
             params: {
               ProfileID: localStorage.getItem("ProfileID"),
-              limit: 5,
+              limit: 50,
               offset: PageNumber,
             },
           }
@@ -54,8 +54,8 @@ export default function ProfileView() {
           {
             params: {
               profileID: localStorage.getItem("ProfileID"),
-              limit: 5,
-              offset: 3,
+              limit: 100,
+              offset: 0,
             },
           }
         );
@@ -99,15 +99,15 @@ export default function ProfileView() {
         <h2 className="text-center my-4" style={{ color: "white" }}>
           My Projects
         </h2>
-        <Box py={2} px={3} className="container" >
-
+        <Box py={2} px={3} className="container">
           <Grid container spacing={3}>
-            {MyProjects.map((project,index) => (
+            {MyProjects.map((project, index) => (
               <Grid item key={index} xs={12} sm={6} md={3}>
                 <ProjectsCompnent
                   ProjectID={project.ProjectID}
                   ProjectName={project.ProjectName}
-                  Author={localStorage.getItem("ProfileName")}
+                  Author={project.ProfileID}
+                  AuthorName={localStorage.getItem('ProfileName')}
                 />
               </Grid>
             ))}
@@ -120,20 +120,20 @@ export default function ProfileView() {
           Projects That I Collaborate
         </h2>
         <span className="container-fluid">
-          <Box  className="container" sx={{ }}>
-
+          <Box className="container" sx={{}}>
             <Grid container spacing={3}>
-              {ProjectsCollaborate.map((project,index) => (
+              {ProjectsCollaborate.map((project, index) => (
                 <Grid item key={index} xs={12} sm={6} md={3}>
                   <ProjectsCompnent
+                    ProjectID={project.ProjectID}
                     ProjectName={project.ProjectName}
-                    Author={project.ProjectCreatedTime}
-                    ProjectID={project.ProjectId}
+                    Author={project.ProfileID}
+                    AuthorName={project.ProfileName}
                   />
                 </Grid>
               ))}
             </Grid>
-            </Box>
+          </Box>
         </span>
       </Box>
     </>

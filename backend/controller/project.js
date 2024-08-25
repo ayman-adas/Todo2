@@ -58,7 +58,7 @@ class ProjectController {
     async retrieveProjectCollaborators(req, res) {
         try {
             const { ProjectID } = req.query;
-            const result = await projectRepository.retrieveProjectsCollaborating(parseInt(ProjectID));
+            const result = await projectRepository.retrieveProjectCollaborators(parseInt(ProjectID));
             res.status(200).json({
                 success: true,
                 message: result

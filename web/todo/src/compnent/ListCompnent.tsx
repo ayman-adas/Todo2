@@ -57,7 +57,7 @@ export default function ListComponent({ onCollaboratorsChange }) {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'grey' }}>
       <List component="nav" aria-label="collaborators">
         {taskCollaborate.map((user, index) => (
           <React.Fragment key={user.ProfileEmail}>

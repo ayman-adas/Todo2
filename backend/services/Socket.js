@@ -152,7 +152,7 @@ class SocketsIo extends Socket {
   }
 
   async retrievePublicProjects() {
-    const sql = `SELECT P.ProjectName, Profile.ProfileName, P.ProjectID, COUNT(*) OVER () AS TotalCount FROM Project P INNER JOIN Profile ON P.ProfileID = Profile.ProfileID WHERE P.IsPrivate = false ORDER BY ProjectCreatedTime;`;
+    const sql = `SELECT P.ProjectName, Profile.ProfileName, P.ProjectID, P.ProfileID,COUNT(*) OVER () AS TotalCount FROM Project P INNER JOIN Profile ON P.ProfileID = Profile.ProfileID WHERE P.IsPrivate = false ORDER BY ProjectCreatedTime;`;
     return await this.sql.query(sql);
   }
   sqlInsertProjectQuery = async function (data) {
@@ -182,7 +182,7 @@ class SocketsIo extends Socket {
         console.log('Received send_data:', data);
         try {
           await this.sqlInsertProjectQuery(data.data);
-          socket.emit("projects", await project.retrievePublicProjects());
+          socket.emit("projects", await this.retrievePublicProjects());
         } catch (error) {
           console.error('Error processing data:', error);
         }

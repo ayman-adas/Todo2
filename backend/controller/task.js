@@ -5,7 +5,7 @@ class Tasks {
         const { taskName, taskDescription, taskImage, taskDueDate, ProjectID } = req.body;
         const currentDate = new Date();
         let formattedDueDate;
-
+        console.log(taskImage)
         try {
             // Split the date into parts
 
@@ -20,7 +20,7 @@ class Tasks {
         }
         const result = await taskRepo.createTask({taskName: taskName,taskDescription: taskDescription,taskImage: taskImage, taskDueDate: currentDate,ProjectID: ProjectID,currentDate: currentDate})
 
-        const taskID = result.insertId;
+        const taskID = result;
 
 
         res.status(200).json({
@@ -31,7 +31,7 @@ class Tasks {
 
     insertTaskCollabortor = async (req, res) => {
         const { ProfileEmail, taskID } = req.body;
-        await taskRepo.insertTaskCollabortor(ProfileEmail, taskID)
+        await taskRepo.insertTaskCollaborator({profileEmail: ProfileEmail,taskID: taskID})
 
         res.status(200).json({
             success: true,
@@ -41,9 +41,9 @@ class Tasks {
     }
     retriveTaskollabortor = async (req, res) => {
 
-        const { taskID } = req.body
-
-        const result = await taskRepo.retriveTaskollabortor(taskID)
+        const { taskID } = req.query
+console.log(taskID)
+        const result = await taskRepo.retrieveTaskCollaborators({taskID: taskID})
 
 
         res.status(200).json({
@@ -70,9 +70,9 @@ class Tasks {
             message: result
         });
     }
-    UpdateIsDoneTask = async (req, res) => {
+    UpdateStatus = async (req, res) => {
         const { taskStatus, taskID } = req.body
-        const result = await taskRepo.UpdateIsDoneTask(taskStatus, taskID)
+        const result = await taskRepo.UpdateStatus(taskStatus, taskID)
 
         console.log(result)
         if (result.length != 0) {
@@ -90,7 +90,7 @@ class Tasks {
     }
     retriveTasksReleaetedToProject = async (req, res) => {
         const { ProjectID } = req.query
-        const result = await taskRepo.retriveTasksReleaetedToProject(ProjectID)
+        const result = await taskRepo.retriveTasksReleaetedToProject (ProjectID)
 
         res.status(200).json({
             success: true,

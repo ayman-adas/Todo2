@@ -1,7 +1,8 @@
 const express = require("express");
-const { createSubTask, retriveSubTasksReleaetedToTask } = require("../controller/subTask");
+const { SubTask} = require("../controller/subTask");
 const subTaskRouter = express.Router();
-subTaskRouter.post('/subTask/create',createSubTask);
-subTaskRouter.get("/tasks/subTasks/retrive", retriveSubTasksReleaetedToTask);
+const subtask= new SubTask()
+subTaskRouter.post('/subTask/create',subtask.createSubTask);
+subTaskRouter.get("/tasks/subTasks/retrive", subtask.retriveSubTasksReleaetedToTask );
 
 module.exports={subTaskRouter}

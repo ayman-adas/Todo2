@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
+export default function ProjectsComponent({ ProjectName, Author, ProjectID ,AuthorName}) {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
 
@@ -13,7 +13,6 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
   }, []);
 
   const handleProject = () => {
-    console.log(ProjectID + "iud");
 
     const data = {
       ProjectName: ProjectName,
@@ -22,7 +21,6 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
     };
     navigate("/project", { state: data });
   };
-
   return (
     <Box
       display="grid"
@@ -79,7 +77,7 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID }) {
               {ProjectName}
             </Typography>
             <Typography variant="body1">
-              {Author}
+              {AuthorName}
             </Typography>
           </Card>
         </Typography>
