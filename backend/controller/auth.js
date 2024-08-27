@@ -33,6 +33,7 @@ class AuthController {
 
     async signUp(req, res) {
         const { profileName, profileEmail, profilePasword } = req.body;
+        console.log(profilePasword)
         const hashedPassword = await hashService.makeHash(profilePasword);
         const passwordCode = await hashService.makeHash(new Date().getTime().toString());
 
@@ -67,6 +68,7 @@ class AuthController {
 
     async retrieveUsers(req, res) {
         const users = await userService.findUsers();
+        console.log(users)
         res.status(200).json({ success: true, message: users });
     }
 }

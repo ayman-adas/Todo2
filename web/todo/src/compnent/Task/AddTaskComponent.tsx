@@ -40,8 +40,7 @@ export default function NewTaskComponent() {
         });
       }
 
-      navigate("/profile");
-    } catch (err) {
+window.location.reload()    } catch (err) {
       console.error("Error creating task:", err.message);
     }
   };

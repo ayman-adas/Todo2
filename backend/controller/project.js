@@ -85,6 +85,22 @@ class ProjectController {
             });
         }
     }
+    async retrieveProjects(req, res) {
+        try {
+            const { ProjectID } = req.query;
+console.log(ProjectID)
+            const result = await projectRepository.retrieveProjects(ProjectID);
+            res.status(200).json({
+                success: true,
+                message: result
+            });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 
     async retrieveProjectsCollaborating(req, res) {
         try {
@@ -117,6 +133,55 @@ class ProjectController {
             });
         }
     }
+    async deleteProject(req, res) {
+        try {
+            const { ProjectID } = req.body;
+            console.log("id",ProjectID)
+            await projectRepository.deleteProject(ProjectID);
+            res.status(200).json({
+                success: true,
+                message: "Project collaborator removed successfully."
+            });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+    async updateProjectStatus(req, res) {
+        try {
+            const { ProjectID,status } = req.body;
+            console.log("id",ProjectID)
+            await projectRepository.updateProjectStatus(ProjectID,status);
+            res.status(200).json({
+                success: true,
+                message: "Project collaborator removed successfully."
+            });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+    async updateProjectProjectName(req, res) {
+        try {
+            const { ProjectID,ProjectName } = req.body;
+            console.log("id",ProjectID)
+            await projectRepository.updateProjectProjectName(ProjectID,ProjectName);
+            res.status(200).json({
+                success: true,
+                message: "Project collaborator removed successfully."
+            });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
+
 
 module.exports = { ProjectController };

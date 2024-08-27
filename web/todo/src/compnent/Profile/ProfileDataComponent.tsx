@@ -7,11 +7,7 @@ const ProfileDataComponent = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
 
-    const openLightbox = (index) => {
-        setPhotoIndex(index);
-        setIsOpen(true);
-    };
-
+  
     const images = [
         "https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg"
     ];
@@ -26,7 +22,7 @@ const ProfileDataComponent = () => {
                 alt="Profile"
                 style={{ width: 100, height: 100, borderRadius: 50, cursor: 'pointer' }}
                 loading="lazy"
-                onClick={() => openLightbox(0)} // Open lightbox on click
+             
             />
             {isOpen && (
                 <Lightbox

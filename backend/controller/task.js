@@ -63,6 +63,9 @@ console.log(taskID)
     }
     deleteTaskCollaborator = async (req, res) => {
         const { ProfileID, taskID } = req.body
+        console.log("tasid",taskID)
+        console.log("profileid",ProfileID)
+
         const result = await taskRepo.deleteTaskCollaborator(ProfileID, taskID)
 
         res.status(200).json({
@@ -88,9 +91,59 @@ console.log(taskID)
             }); res.end();
         }
     }
+    UpdateTaskName = async (req, res) => {
+        const { taskName, taskID } = req.body
+        console.log("taskname",taskName)
+        console.log("taskname",taskID)
+
+        const result = await taskRepo.UpdateTaskName(taskName, taskID)
+
+        console.log(result)
+        if (result.length != 0) {
+            res.status(200).json({
+                success: true,
+                message: 'sucsess'
+            }); res.end();
+        }
+        else {
+            res.status(200).json({
+                success: false,
+                message: "doesnt exist."
+            }); res.end();
+        }
+    }
+    UpdateTaskDesc = async (req, res) => {
+        const { taskDesc, taskID } = req.body
+        console.log("taskDesc",taskDesc)
+        console.log("taskname",taskID)
+        const result = await taskRepo.UpdateTaskDesc(taskDesc, taskID)
+
+        console.log(result)
+        if (result.length != 0) {
+            res.status(200).json({
+                success: true,
+                message: 'sucsess'
+            }); res.end();
+        }
+        else {
+            res.status(200).json({
+                success: false,
+                message: "doesnt exist."
+            }); res.end();
+        }
+    }
     retriveTasksReleaetedToProject = async (req, res) => {
         const { ProjectID } = req.query
         const result = await taskRepo.retriveTasksReleaetedToProject (ProjectID)
+
+        res.status(200).json({
+            success: true,
+            message: result
+        });
+    }
+    deleteTask = async (req, res) => {
+        const { taskID } = req.body
+        const result = await taskRepo.deleteTask (taskID)
 
         res.status(200).json({
             success: true,

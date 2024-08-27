@@ -10,4 +10,6 @@ authRouters.post("/signUp",auth.signUp);
 authRouters.post("/login", auth.login);
 authRouters.post("/forgetPassword",auth. forgetPassword);
 authRouters.patch("/updatePassword",auth. updatePassword);
+authRouters.get("/users",auth.retrieveUsers)
+
 module.exports = {authRouters};

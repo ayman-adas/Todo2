@@ -2,29 +2,19 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import axios from "axios";
 import TaskComponent from "../../compnent/Task/TaskCompnent";
-import { Box } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 
 const taskStatus = {
-  toDo: {
-    name: "To do",
-    items: []
-  },
-  inProgress: {
-    name: "In Progress",
-    items: []
-  },
-  done: {
-    name: "Done",
-    items: []
-  }
+  toDo: { name: "To do", items: [] },
+  inProgress: { name: "In Progress", items: [] },
+  done: { name: "Done", items: [] }
 };
 
 const onDragEnd = async (result, columns, setColumns) => {
   if (!result.destination) return;
   const { source, destination } = result;
-  console.log(result.draggableId)
-  // console.log(Columns)
-  console.log((columns[destination.droppableId].name))
+
   if (source.droppableId !== destination.droppableId) {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
@@ -56,45 +46,46 @@ const onDragEnd = async (result, columns, setColumns) => {
       }
     });
   }
-  var taskStatus;
+
+  let taskStatus;
   switch (columns[destination.droppableId].name) {
     case 'To do':
-      taskStatus = 0
+      taskStatus = 0;
       break;
     case 'In Progress':
-      taskStatus = 1
+      taskStatus = 1;
       break;
     case 'Done':
-      taskStatus = 2
+      taskStatus = 2;
       break;
     default:
-      console.warn(`Unknown task status: ${task.TaskStatus}`);
-  }
-console.log(taskStatus)
-const response = await axios.put(
-  "http://localhost:2003/task/updateStatus",
-  {
-    taskStatus: taskStatus,
-    taskID: result.draggableId
+      console.warn(`Unknown task status: ${columns[destination.droppableId].name}`);
   }
 
-);
-console.log(response.data.message)
-
+  await axios.patch(
+    "http://localhost:2003/task/updateStatus",
+    {
+      taskStatus: taskStatus,
+      taskID: result.draggableId
+    }
+  );
 };
 
-function Board({ data }) {
-  const [columns, setColumns] = useState(taskStatus);
+function Board({ data, onUpdateProjectName,ProjectName }) {
+  const [columns, setColumns] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [projectNameChange, setprojectNameChange] = useState(data.ProjectName);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
           "http://localhost:2003/project/tasks/retrive",
-          {
-            params: { ProjectID: data.ProjectID },
-          }
+          { params: { ProjectID: data.ProjectID } }
         );
+        taskStatus.toDo.items = [];
+        taskStatus.inProgress.items = [];
+        taskStatus.done.items = [];
         response.data.message.forEach(task => {
           switch (task.taskStatus) {
             case '0':
@@ -110,7 +101,7 @@ function Board({ data }) {
               console.warn(`Unknown task status: ${task.TaskStatus}`);
           }
         });
-        setColumns({ ...taskStatus }); // Update columns state with task data
+        setColumns({ ...taskStatus });
 
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -120,83 +111,130 @@ function Board({ data }) {
     fetchData();
   }, [data.ProjectID]);
 
+  const handleSaveClick = async () => {
+    setIsEditing(false);
+    try {
+      await axios.patch(
+        "http://localhost:2003/project/update/ProjectName",
+        { 
+          ProjectID: data.ProjectID, 
+          ProjectName: projectNameChange 
+        }
+      );
+      onUpdateProjectName(projectNameChange);
+    } catch (error) {
+      console.error("Error updating project name:", error);
+    }
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
   return (
     <div>
-      <h1 style={{ textAlign: "center", color: "white" }}>{data.ProjectName}</h1>
-      <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-        <DragDropContext
-          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
-        >
-          {Object.entries(columns).map(([columnId, column], index) => {
-            return (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center"
-                }}
-                key={columnId}
-              >
-                <h2 style={{ color: "wheat" }}>{column.name}</h2>
-                <div style={{ margin: 8 }}>
-                  <Droppable droppableId={columnId} key={columnId}>
-                    {(provided, snapshot) => {
-                      return (
+      {data.Author == localStorage.getItem("ProfileID") ? (
+        <div>
+          {isEditing ? (
+            <div style={{ textAlign: "center", color: "white", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <TextField
+                value={projectNameChange}
+                onChange={(e) => setprojectNameChange(e.target.value)}
+                variant="outlined"
+                inputProps={{ style: { color: "white", backgroundColor: "GrayText" } }}
+              />
+              <Button onClick={handleSaveClick} style={{ marginLeft: 10 }}>
+                Save
+              </Button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <h1 style={{ margin: 0, color: "white" }}>{ProjectName}</h1>
+              <Button onClick={handleEditClick} style={{ marginLeft: 10, color: 'white' }}>
+                <EditIcon />
+              </Button>
+            </div>
+          )}
+          <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+            <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
+              {Object.entries(columns).map(([columnId, column], index) => (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }} key={columnId}>
+                  <h2 style={{ color: "wheat" }}>{column.name}</h2>
+                  <div style={{ margin: 8 }}>
+                    <Droppable droppableId={columnId} key={columnId}>
+                      {(provided, snapshot) => (
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                           style={{
-                            background: snapshot.isDraggingOver
-                              ? "lightblue"
-                              : "lightgrey",
+                            background: snapshot.isDraggingOver ? "lightblue" : "lightgrey",
                             padding: 4,
                             width: 250,
                             minHeight: 500,
-                            maxHeight: 500, // Set a max height for scrolling
-                            overflowY: "auto",// Enable vertical scrolling
-                            "&::-webkit-scrollbar": {
-                              display: "none", // Hide scrollbar in Webkit browsers
-                            },
-                            "-ms-overflow-style": "none", // Hide scrollbar in IE and Edge
-                            "scrollbar-width": "none", // Hide scrollbar in Firefox
+                            maxHeight: 500,
+                            overflowY: "auto",
+                            "&::-webkit-scrollbar": { display: "none" },
+                            "-ms-overflow-style": "none",
+                            "scrollbar-width": "none",
                           }}
                         >
-                          {column.items.map((item, index) => {
-                            return (
-                              <Box key={item.TaskID.toString()}>
-                                <Draggable
-                                  key={item.TaskID.toString()}
-                                  draggableId={item.TaskID.toString()}
-                                  index={index}
-                                >
-                                  {(provided, snapshot) => {
-                                    return (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
-                                        <TaskComponent
-                                         data={item}
-                                        />
-                                      </div>
-                                    );
-                                  }}
-                                </Draggable>
-                              </Box>
-                            );
-                          })}
+                          {column.items.map((item, index) => (
+                            <Box key={item.TaskID.toString()}>
+                              <Draggable key={item.TaskID.toString()} draggableId={item.TaskID.toString()} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <TaskComponent data={item} />
+                                  </div>
+                                )}
+                              </Draggable>
+                            </Box>
+                          ))}
                           {provided.placeholder}
                         </div>
-                      );
-                    }}
-                  </Droppable>
+                      )}
+                    </Droppable>
+                  </div>
+                </div>
+              ))}
+            </DragDropContext>
+          </div>
+        </div>
+      ) : (
+        <div >
+          <h1 style={{ textAlign: "center", color: "white" }}>{data.ProjectName}</h1>
+          <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+            {Object.entries(columns).map(([columnId, column], index) => (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }} key={columnId}>
+                <h2 style={{ color: "wheat" }}>{column.name}</h2>
+                <div
+                style={{
+                  background: "lightgrey",
+                  padding: 4,
+                  width: 250,
+                  minHeight: 500,
+                  maxHeight: 500,
+                  overflowY: "auto",
+                  "&::-webkit-scrollbar": { display: "none" },
+                  "-ms-overflow-style": "none",
+                  "scrollbar-width": "none",
+                  margin:0
+                }}
+                >
+                  {column.items.map((item, index) => (
+                    <Box key={item.TaskID.toString()}>
+                      <TaskComponent data={item} />
+                    </Box>
+                  ))}
                 </div>
               </div>
-            );
-          })}
-        </DragDropContext>
-      </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

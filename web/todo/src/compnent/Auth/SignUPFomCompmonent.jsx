@@ -16,7 +16,7 @@ export default function SignUpFormComponent() {
             .post("http://localhost:2003/signUp", {
                 profileName,
                 profileEmail,
-                profilePassword,
+                profilePasword: profilePassword,
             })
             .then((result) => {
                 localStorage.setItem('token', result.data.token);

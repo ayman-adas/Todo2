@@ -13,5 +13,8 @@ taskRouter.get("/project/tasks/retrive", tasks.retriveTasksReleaetedToProject);
 
 taskRouter.delete("/task/collabortors/delete",tasks. deleteTaskCollaborator);
 taskRouter.put("/task/updateStatus", tasks.UpdateStatus);
+taskRouter.put("/task/updateTaskName", tasks.UpdateTaskName);
+taskRouter.put("/task/updateTaskDesc", tasks.UpdateTaskDesc);
+taskRouter.delete("/task/delete",tasks. deleteTask);
 
 module.exports = {taskRouter};

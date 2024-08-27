@@ -60,9 +60,27 @@ class TaskReposotory extends ITaskRepository {
         return result
 
     }
+    async deleteTask( taskID) {
+        console.log(taskID)
+        var sql = `
+    delete from task where taskID= ? `;
+        const result = await mysql.query(sql, [ taskID],)
+        return result
+
+    }
     async UpdateStatus(taskStatus, taskID) {
         const sql = `UPDATE task SET taskStatus = ? WHERE taskID = ? `;
         const result = await mysql.query(sql, [taskStatus, taskID])
+        return result
+    }
+    async UpdateTaskName(taskName, taskID) {
+        const sql = `UPDATE task SET taskName = ? WHERE taskID = ? `;
+        const result = await mysql.query(sql, [taskName, taskID])
+        return result
+    }
+    async UpdateTaskDesc(taskDesc, taskID) {
+        const sql = `UPDATE task SET taskDescription = ? WHERE taskID = ? `;
+        const result = await mysql.query(sql, [taskDesc, taskID])
         return result
     }
     async retriveTasksReleaetedToProject(ProjectID) {
