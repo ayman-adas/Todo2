@@ -49,12 +49,10 @@ Welcome to the Todo Website! 🚀 This project is a full-stack application built
 Navigate to the project directory:
 
 bash
-نسخ الكود
 cd todo-website
 Install dependencies:
 
 bash
-نسخ الكود
 npm install
 Configure MySQL Database:
 
@@ -62,7 +60,6 @@ Create a new MySQL database.
 Import the schema from the database/schema.sql file.
 Update the database connection settings in the .env file:
 env
-نسخ الكود
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=yourpassword
@@ -70,7 +67,6 @@ DB_NAME=tododb
 Start the development server:
 
 bash
-نسخ الكود
 npm start
 Usage
 Authentication
