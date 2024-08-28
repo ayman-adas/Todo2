@@ -1,7 +1,63 @@
 # Todo Website
 
 Welcome to the Todo Website! 🚀 This project is a full-stack application built with Node.js and React, styled using Material UI, and powered by a MySQL database. It provides a seamless and interactive experience for managing projects and tasks, with robust authentication and dynamic features.
+Project Management Dashboard
+This React project features a dashboard with task management capabilities, including a kanban board for managing tasks, a form for creating subtasks, and a configuration for project privacy settings.
 
+Features
+Task Management Board:
+
+Drag-and-Drop Functionality: Organize tasks across different columns (To Do, In Progress, Done) using drag-and-drop.
+Editable Task Status: Update task status by moving tasks between columns.
+Dynamic Data Handling: Fetch and display tasks from the server, and update their status in real-time.
+Subtask Creation Form:
+
+Create Subtasks: Add new subtasks to a main task with a name, priority, and dates.
+Date Validation: Ensure that the start date is before the end date.
+Form Controls: Use Material-UI components for form inputs.
+Project Privacy Configuration:
+
+Privacy Settings: Configure project privacy with options True or False.
+Default Value: Default privacy setting is False.
+Components
+1. Board
+The Board component displays the kanban board for task management.
+
+Props:
+
+data: Project data including tasks.
+onUpdateProjectName: Callback function to update the project name.
+ProjectName: Current name of the project.
+Features:
+
+Drag-and-Drop: Allows tasks to be moved between columns using react-beautiful-dnd.
+Task Columns: To Do, In Progress, Done.
+Project Name Editing: Allows editing of the project name if the user is the author.
+2. CreateSubTaskForm
+The CreateSubTaskForm component is used for creating new subtasks.
+
+Props:
+
+data: Contains task ID for which the subtask is created.
+State:
+
+subTaskName: Name of the subtask.
+priority: Priority level of the subtask.
+selectedStartDate: Start date of the subtask.
+selectedDueDate: End date of the subtask.
+Features:
+
+Form Fields: Input fields for subtask name, priority, and dates.
+Date Validation: Alerts if the end date is before the start date.
+3. PrivacySettings
+The PrivacySettings component allows users to configure project privacy.
+
+State:
+
+isPrivate: Privacy setting, where "0" is default (False), "1" is True.
+Features:
+
+Radio Buttons: Two options for privacy setting, with "False" preselected.
 ## Features
 
 - **User Authentication:**
