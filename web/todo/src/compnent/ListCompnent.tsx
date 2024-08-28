@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import Checkbox from '@mui/material/Checkbox';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
+import Checkbox from "@mui/material/Checkbox";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 export default function ListComponent({ onCollaboratorsChange }) {
   const location = useLocation();
@@ -27,9 +27,12 @@ export default function ListComponent({ onCollaboratorsChange }) {
       }
 
       try {
-        const response = await axios.get("http://localhost:2003/project/collabortors/retrive", {
-          params: { ProjectID: projectID }
-        });
+        const response = await axios.get(
+          "http://localhost:2003/project/collabortors/retrive",
+          {
+            params: { ProjectID: projectID },
+          }
+        );
         setTaskCollaborate(response.data.message || []); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching collaborators:", error);
@@ -57,29 +60,35 @@ export default function ListComponent({ onCollaboratorsChange }) {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'grey' }}>
+    <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "grey" }}>
       <List component="nav" aria-label="collaborators">
-        {taskCollaborate.map((user, index) => (
-          <React.Fragment key={user.ProfileEmail}>
-            <ListItemButton
-              selected={selectedIndex === index}
-              onClick={(event) => handleListItemClick(event, index)}
-              sx={{ borderRadius: 1 }} // Rounded corners
-            >
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={selectedEmails.has(user.ProfileEmail)}
-                  onChange={(event) => handleCheckboxChange(event, user.ProfileEmail)}
-                  tabIndex={-1}
-                  disableRipple
-                />
-              </ListItemIcon>
-              <ListItemText primary={user.ProfileEmail} />
-            </ListItemButton>
-            <Divider component="li" />
-          </React.Fragment>
-        ))}
+        {taskCollaborate.map((user, index) => {
+          const { ProfileEmail } = user;
+
+          return (
+            <React.Fragment key={ProfileEmail}>
+              <ListItemButton
+                selected={selectedIndex === index}
+                onClick={(event) => handleListItemClick(event, index)}
+                sx={{ borderRadius: 1 }} // Rounded corners
+              >
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    checked={selectedEmails.has(ProfileEmail)}
+                    onChange={(event) =>
+                      handleCheckboxChange(event, ProfileEmail)
+                    }
+                    tabIndex={-1}
+                    disableRipple
+                  />
+                </ListItemIcon>
+                <ListItemText primary={ProfileEmail} />
+              </ListItemButton>
+              <Divider component="li" />
+            </React.Fragment>
+          );
+        })}
       </List>
     </Box>
   );

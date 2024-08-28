@@ -15,10 +15,16 @@ export default function NewTaskComponent() {
   const location = useLocation();
   const data = location.state || {}; // Handle undefined state
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(''); // State for error message
 
   const handleCreate = async (e) => {
     e.preventDefault();
+    if(imageSrc==""||selectedDate==""||selectedCollaborators==  new Set()){
+      setErrorMessage('please insert data');
+    }else{
     try {
+      setErrorMessage('');
+
       console.log(taskName)
       const result = await axios.post("http://localhost:2003/task/create", {
         taskName:taskName,
@@ -43,7 +49,7 @@ export default function NewTaskComponent() {
 window.location.reload()    } catch (err) {
       console.error("Error creating task:", err.message);
     }
-  };
+  };}
 
   const handleCollaboratorsChange = (collaborators) => {
     setSelectedCollaborators(collaborators);
@@ -85,14 +91,16 @@ window.location.reload()    } catch (err) {
 
       <AddImageCompnent onImageChange={handleImageChange} />
       <Box height={2}></Box>
-      <DatePickerCompnent onDateChange={handleDateChange} />
+      <DatePickerCompnent onDateChange={handleDateChange} label={"Due date"} />
       <Box height={2}></Box>
 
       <Typography variant="h6" gutterBottom>
         Add Task Collaborators
       </Typography>
       <ListComponent onCollaboratorsChange={handleCollaboratorsChange} />
-
+      <Typography color="error" align="center" sx={{ mb: 2 }}>
+          {errorMessage}
+        </Typography>
       <Button
         variant="contained"
         size="large"

@@ -3,8 +3,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import { TextField } from '@mui/material';
 
-export default function DatePickerCompnent({ onDateChange }) {
+export default function DatePickerCompnent({ onDateChange,label }) {
   const [selectedDate, setSelectedDate] = React.useState(null);
 
   const handleDateChange = (date) => {
@@ -17,10 +18,12 @@ export default function DatePickerCompnent({ onDateChange }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        label="Due Date"
+      
+        label={label}
         value={selectedDate}
         onChange={handleDateChange}
-        renderInput={(params) => <TextField {...params} />
+        renderInput={(params) => <TextField {...params}           required
+        />
       }sx={{backgroundColor:"white"}}
       />
     </LocalizationProvider>

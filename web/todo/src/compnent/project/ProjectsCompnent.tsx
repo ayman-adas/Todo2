@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function ProjectsComponent({ ProjectName, Author, ProjectID ,AuthorName}) {
+export default function ProjectsComponent({ ProjectName, Author, ProjectID ,AuthorName,isPrivate}) {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
 
@@ -18,6 +18,7 @@ export default function ProjectsComponent({ ProjectName, Author, ProjectID ,Auth
       ProjectName: ProjectName,
       Author: Author,
       ProjectID: ProjectID,
+      isPrivate:isPrivate
     };
     navigate("/project", { state: data });
   };

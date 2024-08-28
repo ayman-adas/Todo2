@@ -13,7 +13,7 @@ export default function ProjectPageCompnent({}) {
   const location = useLocation();
   const data = location.state;
   const Navigate = useNavigate();
-  const [isPrivate, setIsPrivate] = useState("true");
+  const [isPrivate, setIsPrivate] = useState(data.isPrivate);
   const [projectName, setProjectName] = useState(data.ProjectName);
 
   // Callback function to update project name in the parent component
@@ -85,33 +85,9 @@ export default function ProjectPageCompnent({}) {
   };
   return (
     <>
-      {/* {data.Author == localStorage.getItem("ProfileID") ? (
-        <Stack
-          direction="row"
-          spacing={2}
-          padding={3}
-          justifyContent="center"
-          paddingTop={12}
-        >
-          <Button
-            variant="contained"
-            onClick={handleCollaborate}
-            sx={{
-              backgroundColor: "#00796b",
-              "&:hover": { backgroundColor: "#004d40" },
-            }}
-          >
-            <Stack direction="row">
-              <PersonAddIcon />
-              Share{" "}
-            </Stack>
-          </Button>
-        </Stack>
-      ) : (
-        <li></li>
-      )} */}
+    
       {data.Author == localStorage.getItem("ProfileID") ? (
-        <Stack direction="row" spacing={20} paddingBottom={152}>
+        <Stack direction="row" spacing={10} paddingBottom={152}>
           <Box
             display="flex"
             justifyContent="center"
@@ -124,32 +100,62 @@ export default function ProjectPageCompnent({}) {
             </Box>
             <Board data={{ ...data,  }} onUpdateProjectName={updateProjectName} ProjectName={projectName}  />
             </Box>
-          <Box pr={10}>
+          <Box pr={50}>
             <ProjectCollaborator data={data} />
             <Box sx={{ pt: 5, pr: 10 }}>
-            <Stack direction={"row"} spacing={5}>
-                            <h5  style={{ color: "wheat" }}
-                            > Update Project Status</h5>
-                            <RadioGroup
-                                row
-                                aria-labelledby="privacy-radio-group"
-                                name="privacy"
-                                value={isPrivate}
-                                onChange={(e) => setIsPrivate(e.target.value)}
-                                sx={{ color: "white", pl: 1 }}
-                            >
-                                <FormControlLabel value="1" control={<Radio />} label="True" sx={{ color: "white", backgroundColor: "lightgrey", spacing: 1 }}
-                                />
-                                <FormControlLabel value="0" control={<Radio />} label="False" sx={{ color: "white", backgroundColor: "lightgrey" }} />
-                            </RadioGroup>
-                            <Button variant="contained" onClick={handleUpdateStatus}>Update</Button>
-                        </Stack>
-                        <br></br>
-</Box>
+    <Paper elevation={3} sx={{ padding: 3, backgroundColor: "#2c2c2c", borderRadius: 2 }}>
+        <Stack direction="row" spacing={4} alignItems="center">
+            <Typography variant="h5" style={{ color: "wheat", paddingLeft:10}}>
+                Update Project Status
+            </Typography>
+            <RadioGroup
+                row
+                aria-labelledby="privacy-radio-group"
+                name="privacy"
+                value={isPrivate}
+                onChange={(e) => setIsPrivate(e.target.value)}
+                sx={{ pl: 2 }}
+            >
+                <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="True"
+                    sx={{
+                        color: "white",
+                        '.MuiRadio-root': { color: 'lightgrey' },
+                        '&.Mui-checked': { color: 'white' },
+                    }}
+                />
+                <FormControlLabel
+                    value="0"
+                    control={<Radio />}
+                    label="False"
+                    sx={{
+                        color: "white",
+                        '.MuiRadio-root': { color: 'lightgrey' },
+                        '&.Mui-checked': { color: 'white' },
+                    }}
+                />
+            </RadioGroup>
+            <Button
+                variant="contained"
+                sx={{
+                    backgroundColor: '#007bff',
+                    '&:hover': {
+                        backgroundColor: '#0056b3',
+                    },
+                }}
+                onClick={handleUpdateStatus}
+            >
+                Update
+            </Button>
+        </Stack>
+    </Paper>
+</Box>              <br></br>
+
               <h3 style={{ fontStyle: "Bold", color: "wheat" }}>
                 Delete Project
               </h3>
-              
               <Button
                 sx={{ backgroundColor: "red", width: 500, color: "white"  }}
                 onClick={handleDeleteProject}

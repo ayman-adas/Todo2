@@ -71,6 +71,8 @@ export default function SignUpFormComponent() {
                 <TextField
                     required
                     fullWidth
+                    type="email"
+
                     id="email"
                     label="Email Address"
                     name="profileEmail"

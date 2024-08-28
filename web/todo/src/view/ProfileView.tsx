@@ -8,12 +8,14 @@ import axios from "axios";
 import ProjectsCompnent from "../compnent/project/ProjectsCompnent";
 import { LIMIT } from "styled-components/dist/utils/createWarnTooManyClasses";
 import "bootstrap/dist/css/bootstrap.css";
+import TaskComponent from "../compnent/Task/TaskCompnent";
 
 export default function ProfileView() {
   const [projects, setProjects] = useState([]);
   var [MyProjects, setMyProjects] = useState([]);
   var [ProjectsCollaborate, setProjectsCollaborate] = useState([]);
   var [PageNumber, setPageNumber] = useState(0);
+  var [TasksCollaborate, setTasksCollaborate] = useState([]);
 
   const Navigate = useNavigate();
 
@@ -69,6 +71,32 @@ export default function ProfileView() {
     // Check if profileID is available before making the request
     fetchProjectsCollaborate();
   }, []);
+  useEffect(() => {
+    console.log("in effect");
+    const fetchTasksCollaborating = async () => {
+      console.log(localStorage.getItem("ProfileID"));
+
+      try {
+        const response = await axios.get(
+          "http://localhost:2003/task/collaborate/retrive",
+          {
+            params: {
+              ProfileID: localStorage.getItem("ProfileID"),
+              limit: 50,
+              offset: PageNumber,
+            },
+          }
+        );
+        console.log(response.data.message);
+        setTasksCollaborate(response.data.message); // Adjust based on response structure
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    // Check if profileID is available before making the request
+    fetchTasksCollaborating();
+  }, []);
   const CreateProjectPage = () => {
     console.log("project page");
     Navigate("/newProject");
@@ -101,16 +129,19 @@ export default function ProfileView() {
         </h2>
         <Box py={2} px={3} className="container">
           <Grid container spacing={3}>
-            {MyProjects.map((project, index) => (
-              <Grid item key={index} xs={12} sm={6} md={3}>
-                <ProjectsCompnent
-                  ProjectID={project.ProjectID}
-                  ProjectName={project.ProjectName}
-                  Author={project.ProfileID}
-                  AuthorName={localStorage.getItem('ProfileName')}
-                />
-              </Grid>
-            ))}
+            {MyProjects.map(function (project, index) {
+              const {ProjectID,ProjectName,ProfileID,isPrivate}=project
+              return (
+                <Grid item key={index} xs={12} sm={6} md={3}>
+                  <ProjectsCompnent
+                    ProjectID={ProjectID}
+                    ProjectName={ProjectName}
+                    Author={ProfileID}
+                    AuthorName={localStorage.getItem("ProfileName")}
+                    isPrivate={isPrivate} />
+                </Grid>
+              );
+            })}
           </Grid>
         </Box>
         <Box height={50}></Box>
@@ -122,14 +153,35 @@ export default function ProfileView() {
         <span className="container-fluid">
           <Box className="container" sx={{}}>
             <Grid container spacing={3}>
-              {ProjectsCollaborate.map((project, index) => (
+              {ProjectsCollaborate.map(function (project, index) {
+                              const {ProjectID,ProjectName,ProfileID,ProfileName,isPrivate}=project
+
+                return (
+                  <Grid item key={index} xs={12} sm={6} md={3}>
+                    <ProjectsCompnent
+                      ProjectID={ProjectID}
+                      ProjectName={ProjectName}
+                      Author={ProfileID}
+                      AuthorName={ProfileName}
+                      isPrivate={isPrivate} />
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Box>
+          <Box height={50}></Box>
+
+        <Divider />
+          <h2 className="text-center my-4" style={{ color: "white" }}>
+          Tasks That I Collaborate
+        </h2>
+        </span>
+        <span className="container-fluid">
+          <Box className="container" sx={{}}>
+            <Grid container spacing={3}>
+              {TasksCollaborate.map((task, index) => (
                 <Grid item key={index} xs={12} sm={6} md={3}>
-                  <ProjectsCompnent
-                    ProjectID={project.ProjectID}
-                    ProjectName={project.ProjectName}
-                    Author={project.ProfileID}
-                    AuthorName={project.ProfileName}
-                  />
+                  <TaskComponent data={task} />
                 </Grid>
               ))}
             </Grid>

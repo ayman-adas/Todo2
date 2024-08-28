@@ -62,7 +62,7 @@ const onDragEnd = async (result, columns, setColumns) => {
       console.warn(`Unknown task status: ${columns[destination.droppableId].name}`);
   }
 
-  await axios.patch(
+  await axios.put(
     "http://localhost:2003/task/updateStatus",
     {
       taskStatus: taskStatus,
@@ -150,7 +150,7 @@ function Board({ data, onUpdateProjectName,ProjectName }) {
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <h1 style={{ margin: 0, color: "white" }}>{ProjectName}</h1>
-              <Button onClick={handleEditClick} style={{ marginLeft: 10, color: 'white' }}>
+              <Button onClick={handleEditClick} style={{  color: 'white' }}>
                 <EditIcon />
               </Button>
             </div>
@@ -178,7 +178,8 @@ function Board({ data, onUpdateProjectName,ProjectName }) {
                             "scrollbar-width": "none",
                           }}
                         >
-                          {column.items.map((item, index) => (
+                          {column.items.length >0 ? (
+                          column.items.map((item, index) => (
                             <Box key={item.TaskID.toString()}>
                               <Draggable key={item.TaskID.toString()} draggableId={item.TaskID.toString()} index={index}>
                                 {(provided, snapshot) => (
@@ -192,7 +193,10 @@ function Board({ data, onUpdateProjectName,ProjectName }) {
                                 )}
                               </Draggable>
                             </Box>
-                          ))}
+                          ))):(
+                            <h1 style={{ color: 'red', textAlign: 'center', paddingTop:200}}>No Data</h1>
+
+                          )}
                           {provided.placeholder}
                         </div>
                       )}
@@ -223,12 +227,15 @@ function Board({ data, onUpdateProjectName,ProjectName }) {
                   "scrollbar-width": "none",
                   margin:0
                 }}
-                >
-                  {column.items.map((item, index) => (
+                >{column.items.length >0 ? (
+                  column.items.map((item, index) => (
                     <Box key={item.TaskID.toString()}>
                       <TaskComponent data={item} />
                     </Box>
-                  ))}
+                  ))
+                ) : (
+                  <h1 style={{ color: 'red', textAlign: 'center', paddingTop:200}}>No Data</h1>
+                )}
                 </div>
               </div>
             ))}

@@ -1,14 +1,27 @@
 const { SubTaskReposotory } = require('../repository/SubTask//SubTaskReposotory');
 const { subTaskRouter } = require('../routes/subTask');
-subTaskRepo = new SubTaskReposotory();
+const {SubTaskAction}=require('./subTaskAction')
+const subTaskRepo = new SubTaskReposotory();
+const subTaskAction = new SubTaskAction();
+
 class SubTask {
     createSubTask = async (req, res) => {
-        const { subTaskName, priority, isDone, taskID, startDate, endDate, ProfileID } = req.body;
+        const { subTaskName, priority, taskID, startDate, endDate, ProfileID } = req.body;
+        const [day, month, year] = startDate.split(' ');
 
-        await subTaskRepo.createSubTask(subTaskName, priority, isDone, taskID, startDate, endDate, ProfileID)
+        // JavaScript's Date constructor expects months to be zero-indexed (0 = January, 11 = December)
+        const parsedDate = new Date(year, month - 1, day);
+        const [day2, month2, year2] = endDate.split(' ');
+
+        // JavaScript's Date constructor expects months to be zero-indexed (0 = January, 11 = December)
+        const parsedDate2 = new Date(year2, month2 - 1, day2);
+        
+        const result = await subTaskRepo.createSubTask(subTaskName, priority, 0, taskID,parsedDate,parsedDate2, ProfileID)
+        console.log(result)
+        subTaskAction.createSubTaskAction("create subTask",ProfileID, result.insertId)
         res.status(200).json({
             success: true,
-            message: "subtask and collaborators inserted successfully."
+            message: result.insertId
         });
     };
     insertTaskCollabortor = (req, res) => {
@@ -100,40 +113,84 @@ class SubTask {
             });
         })
     }
-    UpdateIsDoneTask = (req, res) => {
-        const { taskIsDone, taskID } = req.body
+    UpdateIsDoneSubTask = async (req, res) => {
+        const { subTaskIsDone, subTaskID,ProfileID } = req.body
+        console.log("subtask", subTaskIsDone, subTaskID)
 
-        const sql = `UPDATE task SET taskIsDone = ? WHERE taskID = ? `;
+        await subTaskRepo.UpdateIsDoneSubTask(subTaskIsDone, subTaskID)
+        subTaskAction.createSubTaskAction("UpdateIsDoneSubTask",ProfileID, subTaskID)
 
-        con.query(sql, [taskIsDone, taskID], function (err, result) {
-            if (err) res.status(400).json({
-                success: false,
-                message: err
-            });
-            console.log(result)
-            if (result.length != 0) {
-                res.status(200).json({
-                    success: true,
-                    message: 'sucsess'
-                }); res.end();
-            }
-            else {
-                res.status(200).json({
-                    success: false,
-                    message: "doesnt exist."
-                }); res.end();
-            }
+        res.status(200).json({
+            success: false,
+            message: "doesnt exist."
+        }); res.end();
+    }
+    UpdateEndDateSubTask = async (req, res) => {
+        const { endDate, subTaskID,ProfileID } = req.body
+        console.log("subtask", endDate, subTaskID)
+
+        await subTaskRepo.UpdateEndDateSubTask(endDate, subTaskID)
+        subTaskAction.createSubTaskAction("UpdateEndDateSubTask",ProfileID, subTaskID)
+
+        res.status(200).json({
+            success: false,
+            message: "doesnt exist."
+        }); res.end();
+    }
+    UpdatePrioritySubTask = async (req, res) => {
+        const { priority, subTaskID,ProfileID } = req.body
+        console.log("subtask", priority, subTaskID)
+
+        await subTaskRepo.UpdatePrioritySubTask(priority, subTaskID)
+        subTaskAction.createSubTaskAction("UpdatePrioritySubTask",ProfileID, subTaskID)
+
+        res.status(200).json({
+            success: false,
+            message: "doesnt exist."
+        }); res.end();
+    }
+    UpdateStartDateSubTask = async (req, res) => {
+        const { startDate, subTaskID ,ProfileID} = req.body
+        console.log("subtask", startDate, subTaskID)
+
+        await subTaskRepo.UpdateStartDateSubTask(startDate, subTaskID)
+        subTaskAction.createSubTaskAction("UpdateStartDateSubTask",ProfileID, subTaskID)
+
+        res.status(200).json({
+            success: false,
+            message: "doesnt exist."
+        }); res.end();
+    }
+    UpdateSubTaskName = async (req, res) => {
+        const { subTaskName, subTaskID ,ProfileID} = req.body
+        console.log("subtask", subTaskName, subTaskID)
+        subTaskAction.createSubTaskAction("UpdateSubTaskName",ProfileID, subTaskID)
+
+        await subTaskRepo.UpdateIsDoneSubTask(subTaskName, subTaskID)
+
+        res.status(200).json({
+            success: false,
+            message: "doesnt exist."
+        }); res.end();
+    }
+
+    retriveSubTasksReleaetedToTask = async (req, res) => {
+        const { taskID } = req.query;
+        const result = await subTaskRepo.retrieveSubTasksRelatedToTask(taskID);
+        res.status(200).json({
+            success: true,
+            message: result
         });
     }
-    retriveSubTasksReleaetedToTask =async (req, res) => {
-        const { taskID } = req.query
-const result=await subTaskRepo.retriveSubTasksReleaetedToTask(taskID)
+    deleteSubTask = async (req, res) => {
+        const { subTaskID,ProfileID } = req.body
+        const result = await subTaskRepo.deleteSubTask(subTaskID)
+        subTaskAction.createSubTaskAction("delete subTask",ProfileID, subTaskID)
 
         res.status(200).json({
             success: true,
             message: result
         });
-
     }
 }
 module.exports = {

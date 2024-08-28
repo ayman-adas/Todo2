@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-export default function ListCollaborate({data}) {
+export default function ListCollaborate({ data }) {
   const location = useLocation();
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [Projectollaborate, setProjectollaborate] = useState([]);
@@ -25,7 +25,7 @@ export default function ListCollaborate({data}) {
       }
 
       try {
-        console.log(projectID)
+        console.log(projectID);
         const response = await axios.get(
           "http://localhost:2003/project/collabortors/retrive",
           {
@@ -70,24 +70,30 @@ export default function ListCollaborate({data}) {
   return (
     <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       <List component="nav" aria-label="main mailbox folders">
-        {Projectollaborate.map((user, index) => (
-          <React.Fragment key={index}>
-            <ListItemButton
-              selected={selectedIndex === index}
-              onClick={(event) => handleListItemClick(event, index)}
-            >
-              {data.Author == localStorage.getItem("ProfileID") ? (
-                user.ProfileEmail != localStorage.getItem("ProfileEmail") ? (
-                  <HighlightOffIcon
-                    onClick={(event) => handleDeleteChange(event, user.ProfileEmail)}
-                  />
-                ) : null
-              ) : null}
-              <ListItemText primary={user.ProfileEmail} />
-            </ListItemButton>
-            <Divider component="li" />
-          </React.Fragment>
-        ))}
+        {Projectollaborate.map(function (user, index) {
+          const { ProfileEmail } = user;
+
+          return (
+            <React.Fragment key={index}>
+              <ListItemButton
+                selected={selectedIndex === index}
+                onClick={(event) => handleListItemClick(event, index)}
+              >
+                {data.Author == localStorage.getItem("ProfileID") ? (
+                  ProfileEmail != localStorage.getItem("ProfileEmail") ? (
+                    <HighlightOffIcon
+                      onClick={(event) =>
+                        handleDeleteChange(event, ProfileEmail)
+                      }
+                    />
+                  ) : null
+                ) : null}
+                <ListItemText primary={ProfileEmail} />
+              </ListItemButton>
+              <Divider component="li" />
+            </React.Fragment>
+          );
+        })}
       </List>
     </Box>
   );

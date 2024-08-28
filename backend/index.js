@@ -8,6 +8,8 @@ const { MySql } = require('./services/database')
 const { authRouters } = require("./routes/auth")
 const { ProjectRouter } = require("./routes/project")
 const { subTaskRouter } = require("./routes/subTask")
+const { subTaskActionRouter } = require("./routes/subTaskAction")
+
 const { taskRouter } = require("./routes/task")
 const { MyClass } = require("./models/length")
 const { SocketsIo } = require('./services/Socket');
@@ -23,6 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authRouters)
 app.use(ProjectRouter)
 app.use(subTaskRouter)
+app.use(subTaskActionRouter)
+
 app.use(taskRouter)
 mySql = new MySql()
 mySql.connect()// // Use your routers and routes here...

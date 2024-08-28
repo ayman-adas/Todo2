@@ -11,7 +11,7 @@ const HomeComponent = ({ searchQuery }) => {
     const [filteredProjects, setFilteredProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [projectName, setProjectName] = useState("");
-    const [isPrivate, setIsPrivate] = useState("true");
+    const [isPrivate, setIsPrivate] = useState("0");
 
     const handleCreate = (e) => {
         e.preventDefault();
@@ -114,6 +114,7 @@ const HomeComponent = ({ searchQuery }) => {
                                     Author={project.ProfileID}
                                     ProjectID={project.ProjectID}
                                     AuthorName={project.ProfileName}
+                                    isPrivate={project.isPrivate}
                                 />
                             </Grid>
                         ))}

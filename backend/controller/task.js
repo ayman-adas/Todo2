@@ -4,21 +4,22 @@ class Tasks {
     createTask = async (req, res) => {
         const { taskName, taskDescription, taskImage, taskDueDate, ProjectID } = req.body;
         const currentDate = new Date();
-        let formattedDueDate;
-        console.log(taskImage)
+        const [day, month, year] = taskDueDate.split(' ');
+
+        // JavaScript's Date constructor expects months to be zero-indexed (0 = January, 11 = December)
+        const parsedDate = new Date(year, month - 1, day);        console.log(taskImage)
         try {
             // Split the date into parts
 
             // Check if the date is valid
-            const dueDate = new Date(formattedDueDate);
-
+          
         } catch (error) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid taskDueDate: ' + error.message
             });
         }
-        const result = await taskRepo.createTask({taskName: taskName,taskDescription: taskDescription,taskImage: taskImage, taskDueDate: currentDate,ProjectID: ProjectID,currentDate: currentDate})
+        const result = await taskRepo.createTask({taskName: taskName,taskDescription: taskDescription,taskImage: taskImage, taskDueDate: parsedDate,ProjectID: ProjectID,currentDate: currentDate})
 
         const taskID = result;
 
@@ -53,8 +54,8 @@ console.log(taskID)
     }
 
     retriveTasksCollaborate = async (req, res) => {
-        const { ProfileID } = req.body
-        const result = await taskRepo.retriveTasksCollaborate(ProfileID)
+        const { ProfileID } = req.query
+        const result = await taskRepo.retrievTasksCollaborating(ProfileID)
 
         res.status(200).json({
             success: true,

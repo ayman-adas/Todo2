@@ -7,7 +7,14 @@ class ISubTaskRepository {
     // retrievSubTasksCollaborating(profileId) { throw new Error('Not implemented'); }
     // deleteSubTaskCollaborator(profileEmail, SubtaskID) { throw new Error('Not implemented'); }
     UpdateStatus(SubtaskStatus, SubtaskID) { throw new Error('Not implemented'); }
-    retriveSubTasksReleaetedToTask (ProjectID) { throw new Error('Not implemented'); }
+    UpdateIsDoneSubTask(SubtaskISDone, SubtaskID) { throw new Error('Not implemented'); }
+    UpdateEndDateSubTask(EndDate, SubtaskID) { throw new Error('Not implemented'); }
+    UpdatePrioritySubTask(Priority, SubtaskID) { throw new Error('Not implemented'); }
+    UpdateStartDateSubTask(StartDate, SubtaskID) { throw new Error('Not implemented'); }
+    UpdateSubTaskName(SubTaskNam, SubtaskID) { throw new Error('Not implemented'); }
+
+    retriveSubTasksReleaetedToTask (taskID) { throw new Error('Not implemented'); }
+    deleteSubTask(SubtaskData) { throw new Error('Not implemented'); }
 
 }
 

@@ -49,7 +49,7 @@ class TaskReposotory extends ITaskRepository {
            *
         FROM
         task P
-        INNER JOIN taskcollaborator PC ON P.taskID = PC.taskID where PC.ProfileID= ? `;
+        INNER JOIN taskcollaborator PC inner join project pr ON P.taskID = PC.taskID AND p.projectID=pr.projectID where PC.ProfileID= ? `;
         const result = await mysql.query(sql, profileId,)
         return result
     }

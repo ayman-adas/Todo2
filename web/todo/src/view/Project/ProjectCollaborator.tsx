@@ -31,7 +31,7 @@ export default function ProjectCollaborator({ data }) {
         for (let i = 0; i < allUsers.length; i++) {
           let isCollaborator = false;
           for (let j = 0; j < collaborators.length; j++) {
-            if (allUsers[i].ProfileEmail === collaborators[j]) {
+            if (allUsers[i].ProfileEmail == collaborators[j]) {
               isCollaborator = true;
               break;
             }
@@ -57,13 +57,15 @@ export default function ProjectCollaborator({ data }) {
     const filtered = [];
     for (let i = 0; i < users.length; i++) {
       let isCollaborator = false;
+      const {ProfileEmail}=users[i]
+
       for (let j = 0; j < existingCollaborators.length; j++) {
-        if (users[i].ProfileEmail === existingCollaborators[j]) {
+        if (ProfileEmail == existingCollaborators[j]) {
           isCollaborator = true;
           break;
         }
       }
-      if (!isCollaborator && users[i].ProfileEmail.toLowerCase().includes(query)) {
+      if (!isCollaborator && ProfileEmail.toLowerCase().includes(query)) {
         filtered.push(users[i]);
       }
     }
@@ -75,8 +77,10 @@ export default function ProjectCollaborator({ data }) {
     const filtered = [];
     for (let i = 0; i < users.length; i++) {
       let isCollaborator = false;
+      const {ProfileEmail}=users[i]
+
       for (let j = 0; j < existingCollaborators.length; j++) {
-        if (users[i].ProfileEmail === existingCollaborators[j]) {
+        if (ProfileEmail == existingCollaborators[j]) {
           isCollaborator = true;
           break;
         }
@@ -183,23 +187,25 @@ export default function ProjectCollaborator({ data }) {
             )}
             {searchQuery && (
               <List component="nav" aria-label="main mailbox folders">
-                {filteredUsers.map((user, index) => (
-                  <React.Fragment key={index}>
-                    <ListItemButton>
-                      {data.Author == localStorage.getItem("ProfileID") && user.ProfileEmail != localStorage.getItem("ProfileEmail") ? (
-                        <Checkbox
-                          edge="start"
-                          checked={selectedEmails.has(user.ProfileEmail)}
-                          onChange={(event) => handleCheckboxChange(event, user.ProfileEmail)}
-                          tabIndex={-1}
-                          disableRipple
-                        />
-                      ) : null}
-                      <ListItemText primary={user.ProfileEmail} />
-                    </ListItemButton>
-                    <Divider component="li" />
-                  </React.Fragment>
-                ))}
+                {filteredUsers.map(function (user, index) {
+                  const {ProfileEmail}=user
+                  return (
+                    <React.Fragment key={index}>
+                      <ListItemButton>
+                        {data.Author == localStorage.getItem("ProfileID") && ProfileEmail != localStorage.getItem("ProfileEmail") ? (
+                          <Checkbox
+                            edge="start"
+                            checked={selectedEmails.has(ProfileEmail)}
+                            onChange={(event) => handleCheckboxChange(event, ProfileEmail)}
+                            tabIndex={-1}
+                            disableRipple />
+                        ) : null}
+                        <ListItemText primary={ProfileEmail} />
+                      </ListItemButton>
+                      <Divider component="li" />
+                    </React.Fragment>
+                  );
+                })}
               </List>
             )}
             {searchQuery && (

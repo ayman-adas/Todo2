@@ -14,13 +14,14 @@ import {
   TextField,
   Button,
   IconButton,
+  Grid,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { motion } from "framer-motion";
 import axios from "axios";
 import TaskCollaborator from "../../view/Tasks/TaskCollaborator";
 import SubTask from "../SubTask/SubTask";
-import { Navigate } from "react-router-dom";
+import CreateSubTaskForm from "../SubTask/AddSubTask";
 
 export default function TaskComponent({ data }) {
   const [taskCollaborate, setTaskCollaborate] = useState([]);
@@ -29,7 +30,6 @@ export default function TaskComponent({ data }) {
   const descriptionElementRef = useRef<HTMLElement>(null);
   const [TaskNameisEditing, setTaskNameisEditing] = useState(false);
   const [TaskDescisEditing, setTaskDescisEditing] = useState(false);
-
   const [TaskNameChange, setTaskNameChange] = useState(data.TaskName);
   const [TaskDescChange, setTaskDescChange] = useState(data.TaskDescription);
 
@@ -58,7 +58,7 @@ export default function TaskComponent({ data }) {
   const isAuthorized = taskCollaborate.some(
     (collaborator) => collaborator.profileID == profileID
   );
-const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
+  const isAdmin = data.ProfileID == localStorage.getItem("ProfileID");
   let status = "";
   switch (data.taskStatus) {
     case "0":
@@ -77,13 +77,10 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
   const handleTaskNameSaveClick = async () => {
     setTaskNameisEditing(false);
     try {
-      await axios.put(
-        "http://localhost:2003/task/updateTaskName",
-        { 
-          taskID: data.TaskID, 
-          taskName: TaskNameChange 
-        }
-      );
+      await axios.put("http://localhost:2003/task/updateTaskName", {
+        taskID: data.TaskID,
+        taskName: TaskNameChange,
+      });
     } catch (error) {
       console.error("Error updating task name:", error);
     }
@@ -92,13 +89,10 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
   const handleTaskDescSaveClick = async () => {
     setTaskDescisEditing(false);
     try {
-      await axios.put(
-        "http://localhost:2003/task/updateTaskDesc",
-        { 
-          taskID: data.TaskID, 
-          taskDesc: TaskDescChange 
-        }
-      );
+      await axios.put("http://localhost:2003/task/updateTaskDesc", {
+        taskID: data.TaskID,
+        taskDesc: TaskDescChange,
+      });
     } catch (error) {
       console.error("Error updating task description:", error);
     }
@@ -125,22 +119,20 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
       }
     }
   }, [open]);
+
   const handleDeleteTask = async () => {
     try {
       console.log(data.ProjectID + "id");
-      const response = await axios.delete(
-        "http://localhost:2003/task/delete",
-        {
-          data: { taskID: data.TaskID },
-        }
-      );
+      const response = await axios.delete("http://localhost:2003/task/delete", {
+        data: { taskID: data.TaskID },
+      });
       console.log(response.status);
-
-      // setTasks(response.data.message); // Adjust based on response structure
+      window.location.reload();
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.error("Error deleting task:", error);
     }
   };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -148,7 +140,7 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
       transition={{ duration: 0.5, delay: 0.1 }}
       style={{
         width: "100%",
-        maxWidth: 250,
+        maxWidth: 300,
         margin: "0 auto",
         marginBottom: 20,
       }}
@@ -166,12 +158,12 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
         <Card
           variant="outlined"
           sx={{
-            backgroundColor: "#f5f5f5",
+            backgroundColor: isAuthorized ? "#d4edda" : "#f8d7da",
             borderRadius: 2,
             boxShadow: 3,
             height: "auto",
             width: "100%",
-            maxWidth: 250,
+            maxWidth: 300,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -191,23 +183,24 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
               src={data.TaskImage || defaultImage}
               style={{
                 width: "100%",
-                height: "auto",
-                maxHeight: 150,
+                height: 100,
                 objectFit: "fill",
                 borderRadius: 4,
               }}
-              alt={data.TaskName}
             />
-            <Typography variant="h5" fontWeight="bold">
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              sx={{ textAlign: "center" }}
+            >
               {TaskNameChange}
               {isAdmin && (
                 <IconButton
                   onClick={() => setTaskNameisEditing(true)}
-                  sx={{ 
-                    position: "absolute", 
-                    right: 0, 
-                    top: 0,
-                    transform: "translateY(-50%)",
+                  sx={{
+                    position: "absolute",
+                    right: 10,
+                    top: 10,
                     zIndex: 1, // Ensure the icon is visible
                   }}
                 >
@@ -217,6 +210,9 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
             </Typography>
           </Paper>
           <Divider sx={{ my: 1 }} />
+          <Typography variant="body2" sx={{ textAlign: "center", mb: 1 }}>
+            Status: {status}
+          </Typography>
         </Card>
       </div>
 
@@ -229,9 +225,9 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
         PaperProps={{
           sx: {
             width: "80%",
-            maxWidth: "800px",
+            maxWidth: "900px",
             height: "80%",
-            maxHeight: "600px",
+            maxHeight: "700px",
             overflow: "auto", // Enable scrolling
           },
         }}
@@ -249,102 +245,118 @@ const isAdmin=data.ProfileID==localStorage.getItem("ProfileID")
           />
         </DialogTitle>
 
-        <Divider sx={{ backgroundColor: "red" }} />
+        <Divider sx={{ backgroundColor: "#e3e3e3" }} />
 
-        <Stack direction={"row"} spacing={2}>
-          <Box>
-            <DialogContent dividers={scroll == "paper"}>
-              <DialogContentText sx={{ fontWeight: "bold", position: "relative" }}>
-                {TaskNameisEditing  ? (
-                  <>
-                    <TextField
-                      value={TaskNameChange}
-                      onChange={(e) => setTaskNameChange(e.target.value)}
-                      fullWidth
-                    />
-                    <Button onClick={handleTaskNameSaveClick}>Save</Button>
-                  </>
-                ) : (
-                  <>
-                    <Typography variant="h6">
-                      {TaskNameChange}
-                      {isAdmin && (
-                        <IconButton
-                          onClick={() => setTaskNameisEditing(true)}
-                          sx={{ 
-                            position: "absolute", 
-                            right: 0, 
-                            top: 0,
-                            transform: "translateY(-50%)",
-                            zIndex: 1, // Ensure the icon is visible
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      )}
-                    </Typography>
-                  </>
-                )}
-              </DialogContentText>
+        <DialogContent dividers={scroll == "paper"}>
+          <Stack spacing={2}>
+            <DialogContentText>
+              {TaskNameisEditing ? (
+                <>
+                  <TextField
+                    value={TaskNameChange}
+                    onChange={(e) => setTaskNameChange(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    size="small"
+                  />
+                  <Button
+                    onClick={handleTaskNameSaveClick}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 1 }}
+                  >
+                    Save
+                  </Button>
+                </>
+              ) : (
+                <Typography variant="h6">
+                  {TaskNameChange}
+                  {isAdmin && (
+                    <IconButton
+                      onClick={() => setTaskNameisEditing(true)}
+                      sx={{
+                        marginLeft: 1,
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  )}
+                </Typography>
+              )}
+            </DialogContentText>
 
-              <DialogContentText>In list: {status}</DialogContentText>
-              <Divider sx={{ backgroundColor: "red" }} />
-              <DialogContentText
-                id="scroll-dialog-description"
-                ref={descriptionElementRef}
-                tabIndex={-1}
-                sx={{ position: "relative" }}
-              >
-                Description:<br />
-                {TaskDescisEditing ? (
-                  <>
-                    <TextField
-                      value={TaskDescChange}
-                      onChange={(e) => setTaskDescChange(e.target.value)}
-                      multiline
-                      rows={4}
-                      fullWidth
-                    />
-                    <Button onClick={handleTaskDescSaveClick}>Save</Button>
-                  </>
-                ) : (
-                  <>
-                    <Typography variant="body1">
-                      {TaskDescChange}
-                      {isAdmin && (
-                        <IconButton
-                          onClick={() => setTaskDescisEditing(true)}
-                          sx={{ 
-                            position: "absolute", 
-                            right: 0, 
-                            top: 0,
-                            transform: "translateY(-50%)",
-                            zIndex: 1, // Ensure the icon is visible
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      )}
-                    </Typography>
-                  </>
-                )}
-              </DialogContentText>
-              <label>{data.TaskDueDate}</label>
-            </DialogContent>
-          </Box>
+            <DialogContentText>Status: {status}</DialogContentText>
 
-          <Box paddingLeft={40} pb={40}>
+            <Divider sx={{ my: 2 }} />
+
+            <DialogContentText>
+              Description:
+              <br />
+              {TaskDescisEditing ? (
+                <>
+                  <TextField
+                    value={TaskDescChange}
+                    onChange={(e) => setTaskDescChange(e.target.value)}
+                    multiline
+                    rows={4}
+                    fullWidth
+                    variant="outlined"
+                    size="small"
+                  />
+                  <Button
+                    onClick={handleTaskDescSaveClick}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 1 }}
+                  >
+                    Save
+                  </Button>
+                </>
+              ) : (
+                <Typography variant="body1">
+                  {TaskDescChange}
+                  {isAdmin && (
+                    <IconButton
+                      onClick={() => setTaskDescisEditing(true)}
+                      sx={{
+                        marginLeft: 1,
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  )}
+                </Typography>
+              )}
+            </DialogContentText>
+
+            <Divider sx={{ my: 2 }} />
+
+            <Box sx={{ mb: 2 }}>
+              <CreateSubTaskForm
+              data={data}
+              />
+            </Box>
+
+            <Divider sx={{ my: 2 }} />
+
+            <SubTask taskID={data.TaskID} />
+
+            <Divider sx={{ my: 2 }} />
+
             <TaskCollaborator data={data} />
-            <br></br>
-            <Button variant="contained" sx={{backgroundColor:"red"}} onClick={handleDeleteTask} > Delete Task</Button>
 
-          </Box>
-          <Box >
-          </Box>
-        </Stack>
-
-        <Divider sx={{ backgroundColor: "red" }} />
-        <SubTask taskID={data.TaskID} />
+            {isAdmin && (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteTask}
+                sx={{ mt: 2 }}
+              >
+                Delete Task
+              </Button>
+            )}
+          </Stack>
+        </DialogContent>
       </Dialog>
     </motion.div>
   );

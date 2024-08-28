@@ -30,7 +30,7 @@ export default function ListCollaborate({ data }) {
             params: { taskID: data.TaskID },
           }
         );
-        console.log( response.data.message);
+        console.log(response.data.message);
         setProjectollaborate(response.data.message); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -46,19 +46,17 @@ export default function ListCollaborate({ data }) {
 
   const handleDeleteChange = async (event, ProfileID) => {
     console.log("inside handle");
-    console.log( data?.TaskID);
-    console.log( ProfileID);
+    console.log(data?.TaskID);
+    console.log(ProfileID);
     try {
-     
-
       if (ProfileID != localStorage.getItem("ProfileID")) {
         const response = await axios.delete(
           "http://localhost:2003/task/collabortors/delete",
           {
-          data:{
+            data: {
               taskID: data?.TaskID,
               ProfileID: ProfileID,
-          }          
+            },
           }
         );
         console.log(response.status);
@@ -72,26 +70,28 @@ export default function ListCollaborate({ data }) {
   return (
     <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       <List component="nav" aria-label="main mailbox folders">
-        {Projectollaborate.map((user, index) => (
-          <React.Fragment key={index}>
-            <ListItemButton
-              selected={selectedIndex == index}
-              onClick={(event) => handleListItemClick(event, index)}
-            >
-              {data.ProfileID == localStorage.getItem("ProfileID") ? (
-                user.profileEmail != localStorage.getItem("ProfileEmail") ? (
-                  <HighlightOffIcon
-                    onClick={(event) =>
-                      handleDeleteChange(event, user.profileID)
-                    }
-                  />
-                ) : null
-              ) : null}
-              <ListItemText primary={user.profileEmail} />
-            </ListItemButton>
-            <Divider component="li" />
-          </React.Fragment>
-        ))}
+        {Projectollaborate.map(function (user, index) {
+          const { profileEmail, profileID } = user;
+
+          return (
+            <React.Fragment key={index}>
+              <ListItemButton
+                selected={selectedIndex == index}
+                onClick={(event) => handleListItemClick(event, index)}
+              >
+                {data.ProfileID == localStorage.getItem("ProfileID") ? (
+                  profileEmail != localStorage.getItem("ProfileEmail") ? (
+                    <HighlightOffIcon
+                      onClick={(event) => handleDeleteChange(event, profileID)}
+                    />
+                  ) : null
+                ) : null}
+                <ListItemText primary={profileEmail} />
+              </ListItemButton>
+              <Divider component="li" />
+            </React.Fragment>
+          );
+        })}
       </List>
     </Box>
   );
