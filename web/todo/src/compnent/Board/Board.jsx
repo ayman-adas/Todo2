@@ -27,7 +27,7 @@ const Board = ({
 
   const onDragEnd = (result) => {
     if (result.combine) {
-      if (result.type === "COLUMN") {
+      if (result.type == "COLUMN") {
         const shallow = [...ordered];
         shallow.splice(result.source.index, 1);
         setOrdered(shallow);

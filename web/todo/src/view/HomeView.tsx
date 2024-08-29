@@ -3,7 +3,6 @@ import HomeAppBar from "../compnent/HomeAppBar";
 import HomeComponent from "../compnent/HomeCompnent";
 import { Box } from "@mui/material";
 import { CSSTransition } from "react-transition-group";
-import './home.css';
 
 export default function HomeView() {
   const [show, setShow] = React.useState(false);

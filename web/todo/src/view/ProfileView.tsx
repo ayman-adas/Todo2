@@ -9,6 +9,7 @@ import ProjectsCompnent from "../compnent/project/ProjectsCompnent";
 import { LIMIT } from "styled-components/dist/utils/createWarnTooManyClasses";
 import "bootstrap/dist/css/bootstrap.css";
 import TaskComponent from "../compnent/Task/TaskCompnent";
+import APiService from "../service/ApiService";
 
 export default function ProfileView() {
   const [projects, setProjects] = useState([]);
@@ -25,18 +26,18 @@ export default function ProfileView() {
       console.log(localStorage.getItem("ProfileID"));
 
       try {
-        const response = await axios.get(
-          "http://localhost:2003/project/myProjects",
+        const response = await APiService.get(
+          "project/myProjects",
           {
-            params: {
+          
               ProfileID: localStorage.getItem("ProfileID"),
               limit: 50,
               offset: PageNumber,
-            },
+            
           }
         );
-        console.log(response.data.message);
-        setMyProjects(response.data.message); // Adjust based on response structure
+        console.log(response);
+        setMyProjects(response); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
@@ -51,18 +52,16 @@ export default function ProfileView() {
       console.log(localStorage.getItem("ProfileID"));
 
       try {
-        const response2 = await axios.get(
-          "http://localhost:2003/project/retrive/collaborate",
+        const response2 = await APiService.get(
+          "project/retrive/collaborate",
           {
-            params: {
               profileID: localStorage.getItem("ProfileID"),
               limit: 100,
               offset: 0,
-            },
           }
         );
-        console.log(response2.data.message);
-        setProjectsCollaborate(response2.data.message); // Adjust based on response structure
+        console.log(response2);
+        setProjectsCollaborate(response2); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
@@ -77,18 +76,18 @@ export default function ProfileView() {
       console.log(localStorage.getItem("ProfileID"));
 
       try {
-        const response = await axios.get(
-          "http://localhost:2003/task/collaborate/retrive",
+        const response = await APiService.get(
+          "task/collaborate/retrive",
           {
-            params: {
+           
               ProfileID: localStorage.getItem("ProfileID"),
               limit: 50,
               offset: PageNumber,
-            },
+        
           }
         );
-        console.log(response.data.message);
-        setTasksCollaborate(response.data.message); // Adjust based on response structure
+        console.log(response);
+        setTasksCollaborate(response); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching projects:", error);
       }

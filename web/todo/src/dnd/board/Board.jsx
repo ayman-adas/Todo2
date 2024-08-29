@@ -4,6 +4,7 @@ import axios from "axios";
 import TaskComponent from "../../compnent/Task/TaskCompnent";
 import { Box, Button, TextField } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import APiService from "../../service/ApiService";
 
 const taskStatus = {
   toDo: { name: "To do", items: [] },
@@ -62,8 +63,8 @@ const onDragEnd = async (result, columns, setColumns) => {
       console.warn(`Unknown task status: ${columns[destination.droppableId].name}`);
   }
 
-  await axios.put(
-    "http://localhost:2003/task/updateStatus",
+  await APiService.put(
+    "task/updateStatus",
     {
       taskStatus: taskStatus,
       taskID: result.draggableId
@@ -79,14 +80,14 @@ function Board({ data, onUpdateProjectName,ProjectName }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2003/project/tasks/retrive",
-          { params: { ProjectID: data.ProjectID } }
+        const response = await APiService.get(
+          "project/tasks/retrive",
+          {  ProjectID: data.ProjectID  }
         );
         taskStatus.toDo.items = [];
         taskStatus.inProgress.items = [];
         taskStatus.done.items = [];
-        response.data.message.forEach(task => {
+        response.forEach(task => {
           switch (task.taskStatus) {
             case '0':
               taskStatus.toDo.items.push(task);
@@ -114,8 +115,8 @@ function Board({ data, onUpdateProjectName,ProjectName }) {
   const handleSaveClick = async () => {
     setIsEditing(false);
     try {
-      await axios.patch(
-        "http://localhost:2003/project/update/ProjectName",
+      await APiService.patch(
+        "project/update/ProjectName",
         { 
           ProjectID: data.ProjectID, 
           ProjectName: projectNameChange 

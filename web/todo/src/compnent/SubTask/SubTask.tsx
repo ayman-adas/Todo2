@@ -12,6 +12,7 @@ import {
 import Checkbox from "@mui/material/Checkbox";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+import APiService from "../../service/ApiService";
 
 export default function SubTask({ taskID }) {
   const [subTasks, setsubTasks] = useState([]);
@@ -22,14 +23,14 @@ export default function SubTask({ taskID }) {
   useEffect(() => {
     const fetchSubTasks = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2003/tasks/subTasks/retrive",
+        const response = await APiService.get(
+          "tasks/subTasks/retrive",
           {
-            params: { taskID: taskID },
+             taskID: taskID 
           }
         );
-        console.log("subask", response.data.message);
-        setsubTasks(response.data.message); // Adjust based on response structure
+        console.log("subask", response);
+        setsubTasks(response); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
@@ -40,7 +41,7 @@ export default function SubTask({ taskID }) {
 
   const handleCheckboxChange = async (event, isDone, subTaskID) => {
     console.log(event.target.checked ? 1 : 0, "event");
-    await axios.patch("http://localhost:2003/subTask/update/isDone", {
+    await APiService.patch("subTask/update/isDone", {
       subTaskID: subTaskID,
       subTaskIsDone: event.target.checked ? 1 : 0,
       ProfileID:localStorage.getItem("ProfileID")
@@ -62,11 +63,11 @@ export default function SubTask({ taskID }) {
   const handleSaveClick = async (subTaskID) => {
     console.log("editField", editField, editValue);
     // Send the updated value to the server
-    await axios.patch(`http://localhost:2003/subTask/update/${editField}`, {
+    await APiService.patch(`/subTask/update/${editField}`,{
       subTaskID: subTaskID,
       [editField]: editValue
       ,ProfileID:localStorage.getItem("ProfileID")
-    });
+    }) 
     setEditIndex(null);
     // Optionally refresh the data or update it locally
     window.location.reload();
@@ -74,9 +75,9 @@ export default function SubTask({ taskID }) {
   const handledeleteClick = async (subTaskID) => {
     console.log(subTaskID);
     // Send the updated value to the server
-    await axios.delete(`http://localhost:2003/subTask/delete`, {
+    await APiService.delete("subTask/delete", {
       data: { subTaskID: subTaskID },
-    });
+    }) 
     setEditIndex(null);
     // Optionally refresh the data or update it locally
     window.location.reload();

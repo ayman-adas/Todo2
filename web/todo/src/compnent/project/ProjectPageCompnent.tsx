@@ -8,6 +8,8 @@ import { generateQuoteMap } from "../../dnd/mockData";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import NewTaskComponent from "../Task/AddTaskComponent";
 import ProjectCollaborator from "../../view/Project/ProjectCollaborator";
+import APiService from "../../service/ApiService";
+import ApiService from "../../service/ApiService";
 
 export default function ProjectPageCompnent({}) {
   const location = useLocation();
@@ -33,12 +35,7 @@ export default function ProjectPageCompnent({}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2003/project/tasks/retrive",
-          {
-            params: { ProjectID: data.ProjectID },
-          }
-        );
+        const response = await APiService.get("project/tasks/retrive",{ ProjectID: data.ProjectID }) 
         // setTasks(response.data.message); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -50,13 +47,8 @@ export default function ProjectPageCompnent({}) {
   const handleDeleteProject = async () => {
     try {
       console.log(data.ProjectID + "id");
-      const response = await axios.delete(
-        "http://localhost:2003/project/delete",
-        {
-          data: { ProjectID: data.ProjectID },
-        }
-      );
-      console.log(response.status);
+
+      const response = await APiService.delete("project/delete", { ProjectID: data.ProjectID }) 
       Navigate(`/profile`, { state: data });
 
       // setTasks(response.data.message); // Adjust based on response structure
@@ -69,13 +61,15 @@ export default function ProjectPageCompnent({}) {
       console.log(data.ProjectID + "id");
       console.log(isPrivate+ "status");
 
-      const response = await axios.patch(
-        "http://localhost:2003/project/update/status",
-        {
-          ProjectID: data.ProjectID,status:isPrivate,
-        }
-      );
-      console.log(response.status);
+      try {
+        const response = await ApiService.patch("project/update/status", {
+          ProjectID: data.ProjectID,
+          status: isPrivate,
+        });
+        console.log('Status update successful:', response);
+      } catch (error) {
+        console.error('Failed to update status:', error);
+      }
       Navigate(`/profile`, { state: data });
 
       // setTasks(response.data.message); // Adjust based on response structure
@@ -119,7 +113,7 @@ export default function ProjectPageCompnent({}) {
                 <FormControlLabel
                     value="1"
                     control={<Radio />}
-                    label="True"
+                    label="Private"
                     sx={{
                         color: "white",
                         '.MuiRadio-root': { color: 'lightgrey' },
@@ -129,7 +123,7 @@ export default function ProjectPageCompnent({}) {
                 <FormControlLabel
                     value="0"
                     control={<Radio />}
-                    label="False"
+                    label="Public"
                     sx={{
                         color: "white",
                         '.MuiRadio-root': { color: 'lightgrey' },

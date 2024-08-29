@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import ListCollaborate from "../../compnent/TaskCollaborate/ListCollaborate";
+import APiService from "../../service/ApiService";
 
 export default function TaskCollaborator({ data }) {
   const [email, setEmail] = useState("");
@@ -24,22 +25,22 @@ export default function TaskCollaborator({ data }) {
     const fetchUsersAndCollaborators = async () => {
       try {
         // Fetch all users
-        const usersResponse = await axios.get(
-          "http://localhost:2003/project/collabortors/retrive",
+        const usersResponse = await APiService.get(
+          "project/collabortors/retrive",
           {
-            params: { ProjectID: data.ProjectID },
+            ProjectID: data.ProjectID 
           }
         );
-        console.log(usersResponse.data.message,"user")
-        const allUsers = usersResponse.data.message;
+        console.log(usersResponse,"user")
+        const allUsers = usersResponse;
         setUsers(allUsers);
 
         // Fetch existing collaborators
-        const collaboratorsResponse = await axios.get(
-          `http://localhost:2003/task/collabortors/retrive?taskID=${data.TaskID}`
+        const collaboratorsResponse = await APiService.get(
+          `task/collabortors/retrive?taskID=${data.TaskID}`,{}
         );
-        console.log('collaborateresponse',collaboratorsResponse.data.message)
-        const collaborators = collaboratorsResponse.data.message.map(
+        console.log('collaborateresponse',collaboratorsResponse)
+        const collaborators = collaboratorsResponse.map(
           (c) => c.profileEmail
         );
         setExistingCollaborators(collaborators);
@@ -133,7 +134,7 @@ console.log(collaborators,"emails")
 
     try {
       for (const email of selectedEmails) {
-        await axios.post("http://localhost:2003/task/insert/collaborator", {
+        await APiService.post("task/insert/collaborator", {
           taskID: data.TaskID,
           ProfileEmail: email, // Send one email at a time
         });
@@ -142,28 +143,28 @@ console.log(collaborators,"emails")
       window.location.reload();
 
       // Optionally refresh the list of users and collaborators
-      const usersResponse = await axios.get(
-        "http://localhost:2003/project/collabortors/retrive",
+      const usersResponse = await APiService.get(
+        "project/collabortors/retrive",
         {
-          params: { ProjectID: data.ProjectID },
+          ProjectID: data.ProjectID ,
         }
       );
-      const collaboratorsResponse = await axios.get(
-        `http://localhost:2003/task/collabortors/retrive?taskID=${data.taskID}`
+      const collaboratorsResponse = await APiService.get(
+        `task/collabortors/retrive?taskID=${data.taskID}`,{}
       );
 
-      setUsers(usersResponse.data.message);
-      const newCollaborators = collaboratorsResponse.data.message.map(
+      setUsers(usersResponse);
+      const newCollaborators = collaboratorsResponse.map(
         (c) => c.ProfileEmail
       );
 
       setExistingCollaborators(newCollaborators);
       const filtered = [];
-      for (let i = 0; i < usersResponse.data.message.length; i++) {
+      for (let i = 0; i < usersResponse.length; i++) {
         let isCollaborator = false;
         for (let j = 0; j < newCollaborators.length; j++) {
           if (
-            usersResponse.data.message[i].ProfileEmail === newCollaborators[j]
+            usersResponse[i].ProfileEmail === newCollaborators[j]
           ) {
             console.log("isColabo");
             isCollaborator = true;
@@ -171,7 +172,7 @@ console.log(collaborators,"emails")
           }
         }
         if (!isCollaborator) {
-          filtered.push(usersResponse.data.message[i]);
+          filtered.push(usersResponse[i]);
         }
       }
       setFilteredUsers(filtered);

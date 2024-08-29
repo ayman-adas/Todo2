@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Stack, TextField, Button, Radio, RadioGroup, FormControlLabel, FormLabel, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import APiService from "../../service/ApiService";
 
 export default function NewProjectComponent() {
     const [projectName, setProjectName] = useState("");
@@ -10,12 +11,12 @@ export default function NewProjectComponent() {
 
     const handleCreate = (e) => {
         e.preventDefault();
-
-        axios.post("http://localhost:2003/project/create", {
-            ProjectName: projectName,
-            isPrivate: isPrivate,
-            ProfileID: localStorage.getItem("ProfileID"),
-        })
+APiService.post("/project/create", {
+    ProjectName: projectName,
+    isPrivate: isPrivate,
+    ProfileID: localStorage.getItem("ProfileID"),
+})
+      
         .then((result) => {
             navigate("/");
         })

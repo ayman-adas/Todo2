@@ -18,10 +18,11 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { motion } from "framer-motion";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import TaskCollaborator from "../../view/Tasks/TaskCollaborator";
 import SubTask from "../SubTask/SubTask";
 import CreateSubTaskForm from "../SubTask/AddSubTask";
+import APiService from "../../service/ApiService";
 
 export default function TaskComponent({ data }) {
   const [taskCollaborate, setTaskCollaborate] = useState([]);
@@ -39,13 +40,8 @@ export default function TaskComponent({ data }) {
   useEffect(() => {
     const fetchTaskCollaborators = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2003/task/collabortors/retrive",
-          {
-            params: { taskID: data.TaskID },
-          }
-        );
-        setTaskCollaborate(response.data.message || []);
+        const response = await APiService.get("task/collabortors/retrive",{ taskID: data.TaskID })
+        setTaskCollaborate(response || []);
       } catch (error) {
         console.error("Error fetching collaborators:", error);
       }
@@ -77,7 +73,7 @@ export default function TaskComponent({ data }) {
   const handleTaskNameSaveClick = async () => {
     setTaskNameisEditing(false);
     try {
-      await axios.put("http://localhost:2003/task/updateTaskName", {
+      await APiService.put("task/updateTaskName", {
         taskID: data.TaskID,
         taskName: TaskNameChange,
       });
@@ -89,7 +85,7 @@ export default function TaskComponent({ data }) {
   const handleTaskDescSaveClick = async () => {
     setTaskDescisEditing(false);
     try {
-      await axios.put("http://localhost:2003/task/updateTaskDesc", {
+      await APiService.put("task/updateTaskDesc", {
         taskID: data.TaskID,
         taskDesc: TaskDescChange,
       });
@@ -123,9 +119,9 @@ export default function TaskComponent({ data }) {
   const handleDeleteTask = async () => {
     try {
       console.log(data.ProjectID + "id");
-      const response = await axios.delete("http://localhost:2003/task/delete", {
-        data: { taskID: data.TaskID },
-      });
+      const response = await APiService.delete("task/delete", 
+       { taskID: data.TaskID },
+      );
       console.log(response.status);
       window.location.reload();
     } catch (error) {

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import APiService from "../../service/ApiService";
 export default function ListCollaborate({ data }) {
   const location = useLocation();
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -26,14 +27,9 @@ export default function ListCollaborate({ data }) {
 
       try {
         console.log(projectID);
-        const response = await axios.get(
-          "http://localhost:2003/project/collabortors/retrive",
-          {
-            params: { ProjectID: projectID },
-          }
-        );
-        console.log("the collabortor" + response.data.message);
-        setProjectollaborate(response.data.message); // Adjust based on response structure
+        const response =await APiService.get("project/collabortors/retrive", { ProjectID: projectID })  
+        console.log("the collabortor" + response);
+        setProjectollaborate(response); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
@@ -50,16 +46,11 @@ export default function ListCollaborate({ data }) {
     try {
       console.log("inside handle");
       if (ProfileEmail != localStorage.getItem("ProfileEmail")) {
-        const response = await axios.delete(
-          "http://localhost:2003/project/collabortors/delete",
-          {
-            data: {
-              ProjectID: data?.ProjectID,
-              ProfileEmail: ProfileEmail,
-            },
-          }
-        );
-        console.log(response.status);
+        const response = await APiService.delete("project/collabortors/delete",{
+          ProjectID: data?.ProjectID,
+          ProfileEmail: ProfileEmail,
+        }) 
+        console.log(response);
         window.location.reload();
       }
     } catch (error) {

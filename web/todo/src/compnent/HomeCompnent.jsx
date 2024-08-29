@@ -114,7 +114,7 @@ const HomeComponent = ({ searchQuery }) => {
                                     Author={project.ProfileID}
                                     ProjectID={project.ProjectID}
                                     AuthorName={project.ProfileName}
-                                    isPrivate={project.isPrivate}
+                                    isPrivate={0}
                                 />
                             </Grid>
                         ))}

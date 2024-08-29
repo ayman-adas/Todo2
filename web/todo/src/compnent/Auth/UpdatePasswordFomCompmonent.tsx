@@ -3,24 +3,24 @@ import { Box, TextField } from "@mui/material";
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import APiService from "../../service/ApiService";
 export default function UpdatePasswordFomCompmonent() {
     var [ProfilePasword] = useState("");
     var profileEmail = localStorage.getItem('ProfileEmail')
     const Navigate = useNavigate()
 
-    const handleUpdate = (e) => {
+    const handleUpdate = async(e) => {
 
 
         console.log('Update')
         e.preventDefault();
         console.log(ProfilePasword)
         console.log(profileEmail)
-
-        axios
-            .patch("http://localhost:2003/updatePassword", {
-                profilePasword: ProfilePasword,
-                ProfileEmail: localStorage.getItem('ProfileEmail')
-            })
+await APiService.patch("updatePassword",{
+    profilePassword: ProfilePasword,
+    profileEmail: localStorage.getItem('ProfileEmail')
+})
+        
             .then((result) => {
                 console.log("update pass successfully :", result.data);
                 Navigate("/login");

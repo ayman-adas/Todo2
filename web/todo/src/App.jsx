@@ -34,7 +34,7 @@ const  isLoggedIn=localStorage.getItem("ProfileID")!=null && localStorage.getIte
     <Routes>
       <Route path='/' element={<Root />} />
       <Route path='/login' element={<LoginView />} />
-      <Route path='/signUp' element={<SignUpView />} />
+      <Route path='signUp' element={<SignUpView />} />
       <Route path='/forgetPassword' element={<ForgetPasswordView />} />
       <Route path='/updatePassword' element={<UpdatePasswordView />} />
       <Route path='/dialog' element={<AlertDialog />} />

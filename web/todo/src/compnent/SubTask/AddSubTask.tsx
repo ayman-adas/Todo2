@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography, Grid, Stack } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DatePickerCompnent from "../DatePickerCompnent";
 import axios from "axios";
+import APiService from "../../service/ApiService";
 
 const CreateSubTaskForm = (data) => {
 const [subTaskName,setsubTaskName]=useState('')
@@ -21,18 +22,19 @@ console.log(data.data.TaskID , "id");
       }
       setErrorMessage(''); // Clear previous error messages
 
-      console.log(data.taskID + "id");
-      const response = await axios.post("http://localhost:2003/subTask/create", {
-        taskID: data.data.TaskID
-          ,subTaskName:subTaskName,
-          priority: priority
-          ,ProfileID:localStorage.getItem("ProfileID"),
-          startDate:selectedStartDate,
-          endDate:selectedDueDate
-          
-        ,
-      });
-      console.log(response.data.message);
+      console.log(data.data.TaskID+ "id");
+      const response =  await    APiService.post("subTask/create",{
+    taskID: data.data.TaskID
+      ,subTaskName:subTaskName,
+      priority: priority
+      ,ProfileID:localStorage.getItem("ProfileID"),
+      startDate:selectedStartDate,
+      endDate:selectedDueDate
+      
+    ,
+  })
+     
+      console.log(response);
       
       window.location.reload();
     } catch (error) {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Container, Stack, TextField, Typography, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import APiService from "../../service/ApiService";
 
 export default function SignUpFormComponent() {
     const [profileEmail, setProfileEmail] = useState("");
@@ -12,8 +13,8 @@ export default function SignUpFormComponent() {
 
     const handleRegister = (e) => {
         e.preventDefault();
-        axios
-            .post("http://localhost:2003/signUp", {
+        APiService
+            .post("signUp", {
                 profileName,
                 profileEmail,
                 profilePasword: profilePassword,

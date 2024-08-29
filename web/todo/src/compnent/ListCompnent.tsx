@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import APiService from "../service/ApiService";
 
 export default function ListComponent({ onCollaboratorsChange }) {
   const location = useLocation();
@@ -27,13 +28,13 @@ export default function ListComponent({ onCollaboratorsChange }) {
       }
 
       try {
-        const response = await axios.get(
-          "http://localhost:2003/project/collabortors/retrive",
+        const response = await APiService. get(
+          "project/collabortors/retrive",
           {
-            params: { ProjectID: projectID },
+            ProjectID: projectID ,
           }
         );
-        setTaskCollaborate(response.data.message || []); // Adjust based on response structure
+        setTaskCollaborate(response || []); // Adjust based on response structure
       } catch (error) {
         console.error("Error fetching collaborators:", error);
       }

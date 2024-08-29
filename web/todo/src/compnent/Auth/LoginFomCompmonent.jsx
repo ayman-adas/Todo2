@@ -2,25 +2,25 @@ import React, { useState } from "react";
 import { Box, Container, Stack, TextField, Typography, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import APiService from "../../service/ApiService";
 
 export default function LoginFormComponent() {
     const navigate = useNavigate();
     const [profileEmail, setProfileEmail] = useState("");
     const [profilePassword, setProfilePassword] = useState("");
 
-    const handleLogin = (e) => {
+    const handleLogin = async(e) => {
         e.preventDefault();
-        axios
-            .post("http://localhost:2003/login", {
-                loginEmail: profileEmail,
-                loginPassword: profilePassword,
-            })
+       await APiService.post("login",{
+            loginEmail: profileEmail,
+            loginPassword: profilePassword,
+        })
             .then((result) => {
-                console.log("Login successfully:", result.data);
-                localStorage.setItem('ProfileID', result.data.ProfileID);
-                localStorage.setItem('ProfileName', result.data.ProfileName);
-                localStorage.setItem('ProfileEmail', result.data.ProfileEmail);
-                localStorage.setItem('token', result.data.result);
+                console.log("Login successfully:", result);
+                localStorage.setItem('ProfileID', result.ProfileID);
+                localStorage.setItem('ProfileName', result.ProfileName);
+                localStorage.setItem('ProfileEmail', result.ProfileEmail);
+                localStorage.setItem('token', result.result);
                 navigate("/");
             })
             .catch((err) => {
@@ -91,12 +91,12 @@ export default function LoginFormComponent() {
 
                 <Stack direction="row" spacing={1} mt={2} mb={2} alignItems="center">
                     <Typography variant="body2" color={"black"}>Don't have an account?</Typography>
-                    <Link href="#" onClick={() => navigate("/signUp")}>
+                    <Link onClick={() => navigate("/signUp")}>
                         <Button variant="text">Sign Up</Button>
                     </Link>
                 </Stack>
 
-                <Link href="#" onClick={() => navigate("/forgetPassword")}>
+                <Link onClick={() => navigate("/forgetPassword")}>
                     Forgot Password?
                 </Link>
             </Container>

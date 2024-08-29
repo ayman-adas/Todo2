@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, TextField, Button, ListItemText, ListItemButton, Divider, List, Checkbox } from "@mui/material";
 import ListCollaborate from "../../compnent/ProjectCollaborator/ListCollaborate";
 import axios from "axios";
+import APiService from "../../service/ApiService";
 
 export default function ProjectCollaborator({ data }) {
   const [email, setEmail] = useState("");
@@ -15,15 +16,15 @@ export default function ProjectCollaborator({ data }) {
     const fetchUsersAndCollaborators = async () => {
       try {
         // Fetch all users
-        const usersResponse = await axios.get("http://localhost:2003/users");
-        const allUsers = usersResponse.data.message;
+        const usersResponse = await APiService.get("users",{});
+        const allUsers = usersResponse;
         setUsers(allUsers);
 
         // Fetch existing collaborators
-        const collaboratorsResponse = await axios.get(
-          `http://localhost:2003/project/collabortors/retrive?ProjectID=${data.ProjectID}`
+        const collaboratorsResponse = await APiService.get(
+          `project/collabortors/retrive?ProjectID=${data.ProjectID}`,{}
         );
-        const collaborators = collaboratorsResponse.data.message.map(c => c.ProfileEmail);
+        const collaborators = collaboratorsResponse.map(c => c.ProfileEmail);
         setExistingCollaborators(collaborators);
 
         // Filter out existing collaborators from user list
@@ -112,8 +113,8 @@ export default function ProjectCollaborator({ data }) {
 
     try {
       for (const email of selectedEmails) {
-        await axios.post(
-          "http://localhost:2003/project/collabortors/insert",
+        await APiService.post(
+          "project/collabortors/insert",
           {
             ProjectID: data.ProjectID,
             ProfileEmail: email // Send one email at a time
@@ -124,27 +125,27 @@ export default function ProjectCollaborator({ data }) {
       window.location.reload();
 
       // Optionally refresh the list of users and collaborators
-      const usersResponse = await axios.get("http://localhost:2003/users");
-      const collaboratorsResponse = await axios.get(
-        `http://localhost:2003/project/collaborators?ProjectID=${data.ProjectID}`
+      const usersResponse = await APiService .get("users",{});
+      const collaboratorsResponse = await APiService .get(
+        `project/collaborators?ProjectID=${data.ProjectID}`,{}
       );
 
-      setUsers(usersResponse.data.message);
-      const newCollaborators = collaboratorsResponse.data.message.map(c => c.ProfileEmail);
+      setUsers(usersResponse);
+      const newCollaborators = collaboratorsResponse.map(c => c.ProfileEmail);
 
       setExistingCollaborators(newCollaborators);
       const filtered = [];
-      for (let i = 0; i < usersResponse.data.message.length; i++) {
+      for (let i = 0; i < usersResponse.length; i++) {
         let isCollaborator = false;
         for (let j = 0; j < newCollaborators.length; j++) {
-          if (usersResponse.data.message[i].ProfileEmail === newCollaborators[j]) {
+          if (usersResponse[i].ProfileEmail === newCollaborators[j]) {
             console.log('isColabo')
             isCollaborator = true;
             break;
           }
         }
         if (!isCollaborator) {
-          filtered.push(usersResponse.data.message[i]);
+          filtered.push(usersResponse[i]);
         }
       }
       setFilteredUsers(filtered);

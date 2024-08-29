@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Container, TextField, Typography, Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import APiService from "../../service/ApiService";
 
 export default function ForgetPasswordFormComponent() {
     const [profileEmail, setProfileEmail] = useState("");
@@ -11,11 +12,11 @@ export default function ForgetPasswordFormComponent() {
 
     const handleForget = (e) => {
         e.preventDefault();
-        axios
-            .post("http://localhost:2003/forgetPassword", {
-                profileEmail,
-                passwordCode,
-            })
+        APiService.post("forgetPassword", {
+            profileEmail,
+            passwordCode,
+        })
+
             .then((result) => {
                 localStorage.setItem('ProfileEmail', profileEmail);
                 console.log("Password reset initiated successfully:", result.data);
@@ -45,7 +46,7 @@ export default function ForgetPasswordFormComponent() {
                     p: 4,
                     borderRadius: 2,
                     boxShadow: 3,
-                    backgroundColor:"white"
+                    backgroundColor: "white"
                 }}
             >
                 <Typography variant="h4" component="h1" gutterBottom>
