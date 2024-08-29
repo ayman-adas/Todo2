@@ -1,0 +1,13 @@
+1:draggple
+2:socket
+3:image in same desktop
+4:hashing
+5solid principle
+6 dependancy injection
+7 pagination
+8 git stash
+9 password token
+10 uselocation
+11 window.relead
+12 more flexible with react and node
+13 more flexible deal with requirment and database

@@ -28,6 +28,7 @@ function App() {
     medium: generateQuoteMap(100),
     large: generateQuoteMap(500)
   };
+const  isLoggedIn=localStorage.getItem("ProfileID")!=null && localStorage.getItem("ProfileID")!=''
   return (
     <NavigationProvider>
     <Routes>
@@ -37,27 +38,12 @@ function App() {
       <Route path='/forgetPassword' element={<ForgetPasswordView />} />
       <Route path='/updatePassword' element={<UpdatePasswordView />} />
       <Route path='/dialog' element={<AlertDialog />} />
-      <Route path='/home' element={<HomeView loading={false} />} />
-      <Route path='/profile' element={<ProfileView />} />
-      <Route path='/newProject' element={<CreateNewProjectPage />} />
-      <Route path='/project' element={<ProjectView />} />
-      <Route path='/Createtask' element={<AddTaskView />} />
-      <Route path='/collaborator' element={<ProjectCollaborator />} />
-      <Route path='/board' element={<>
-        <Row className="justify-content-center text-center">
-          <Col xs={12}>
-            <Card>
-              <CardBody>
-                <h2>React DnD Testing</h2>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-
-        <Board initial={data.medium} withScrollableColumns />
-      </>
-      } />
-
+      <Route path='/home' element={isLoggedIn? <HomeView loading={false} /> :<LoginView/> }></Route>
+      <Route path='/profile' element={ isLoggedIn?<ProfileView />  :<LoginView/>}  />
+      <Route path='/newProject' element={isLoggedIn ?<CreateNewProjectPage />  :<LoginView/>} />
+      <Route path='/project' element={ isLoggedIn ?<ProjectView /> : <LoginView/>} />
+      <Route path='/Createtask' element={isLoggedIn ?<AddTaskView />  :<LoginView/>} />
+      <Route path='/collaborator' element={isLoggedIn ? <ProjectCollaborator /> : <LoginView/>} />
       <Route path="*" element={<ErrorPage />} />
 
     </Routes>
